@@ -21,9 +21,18 @@ export function useWatchPage() {
   // Remove queries that are no longer active
   useEffect(() => {
     setSelectedQueryIds((prev) => {
+      let changed = false;
+      for (const qid of prev) {
+        if (!queries.has(qid)) {
+          changed = true;
+          break;
+        }
+      }
+      if (!changed) return prev;
+
       const next = new Set(prev);
       for (const qid of prev) {
-        if (!Array.from(queries.keys()).find((qid_) => qid_ === qid)) {
+        if (!queries.has(qid)) {
           next.delete(qid);
         }
       }
