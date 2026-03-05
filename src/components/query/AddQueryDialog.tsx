@@ -17,7 +17,7 @@ export function AddQueryDialog({ loading, open, onClose, onSubmit, queryName, se
       maxWidth="sm"
       open={open}
       onClose={onClose}
-      slotProps={{ paper: { component: 'form', onSubmit: (e: React.FormEvent<HTMLFormElement>) => void onSubmit(e) } }}
+      slotProps={{ paper: { component: 'form', onSubmit: (e: unknown) => void onSubmit(e as React.FormEvent<HTMLFormElement>) } }}
     >
       <DialogTitle>{'Add query'}</DialogTitle>
       <DialogContent>
