@@ -7,7 +7,7 @@ const AttributeProjectionStreamEventSchema = z.object({
 });
 
 export const GetQueryInfoSchema = z.object({
-  query_id: z.number(),
+  query_id: z.number().nullable(),
   result_handler_identifier: z.coerce.number(),
   result_handler_type: z.coerce.number(),
   query_string: z.string(),
