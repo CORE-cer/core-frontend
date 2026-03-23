@@ -90,49 +90,49 @@ WITHIN 10 seconds
   ],
   bluesky: [
     {
-      title: 'Detect all CreatePost',
+      title: 'Detect all Post',
       short_title: 'All Posts',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost`,
+WHERE Post`,
     },
     {
-      title: 'Detect all CreateLike',
+      title: 'Detect all Like',
       short_title: 'All Likes',
       query: `SELECT *
 FROM Bluesky
-WHERE CreateLike`,
+WHERE Like`,
     },
     {
-      title: 'All CreatePost and CreateLike',
+      title: 'All Post and Like',
       short_title: 'All Posts/Likes',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost OR CreateLike`,
+WHERE Post OR Like`,
     },
     {
       title: "Posts referring to 'Trump'",
       short_title: 'Trump',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost
-FILTER CreatePost[text LIKE '[Tt]rump']`,
+WHERE Post
+FILTER Post[text LIKE '[Tt]rump']`,
     },
     {
       title: "Posts referring to 'Trump' in Spanish",
       short_title: 'Trump ES',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost
-FILTER CreatePost[text LIKE '[Tt]rump' AND langs = 'es']`,
+WHERE Post
+FILTER Post[text LIKE '[Tt]rump' AND langs = 'es']`,
     },
     {
       title: 'Two likes for a Trump Post',
       short_title: '2 Likes Trump',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost ; CreateLike ; CreateLike
-FILTER CreatePost[text LIKE '[Tt]rump']
+WHERE Post ; Like ; Like
+FILTER Post[text LIKE '[Tt]rump']
 PARTITION BY [subject_cid,cid]
 WITHIN 40 SECONDS`,
     },
@@ -141,8 +141,8 @@ WITHIN 40 SECONDS`,
       short_title: '2 Likes Only Text',
       query: `SELECT X[text]
 FROM Bluesky
-WHERE CreatePost AS X ; CreateLike ; CreateLike
-FILTER CreatePost[text LIKE '[Tt]rump']
+WHERE Post AS X ; Like ; Like
+FILTER Post[text LIKE '[Tt]rump']
 PARTITION BY [subject_cid,cid]
 WITHIN 40 SECONDS`,
     },
@@ -151,7 +151,7 @@ WITHIN 40 SECONDS`,
       short_title: 'Detect Bots',
       query: `SELECT *
 FROM Bluesky
-WHERE CreatePost ; CreatePost ; CreatePost
+WHERE Post ; Post ; Post
 PARTITION BY [did]
 WITHIN 10 SECONDS`,
     },

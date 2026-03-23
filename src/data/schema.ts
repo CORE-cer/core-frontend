@@ -35,7 +35,7 @@ const COINBASE_SCHEMA = {
 
 const BLUESKY_SCHEMA = {
   Bluesky: {
-    CreatePost: {
+    Post: {
       did: 'did:plc:ovwabcu6febdpxar2diytg2s',
       kind: 'commit',
       time: new Date('2022-10-19T23:28:22.061769Z'),
@@ -45,7 +45,7 @@ const BLUESKY_SCHEMA = {
       langs: 'en, ja',
       text: 'My first post',
     },
-    CreateFollow: {
+    Follow: {
       did: 'did:plc:ovwabcu6febdpxar2diytg2s',
       kind: 'commit',
       time: new Date('2022-10-19T23:28:22.061769Z'),
@@ -54,7 +54,7 @@ const BLUESKY_SCHEMA = {
       record_type: 'app.bsky.graph.follow',
       subject: 'did:plc:2pw4kg45i3tyedg3kpnzr3zi',
     },
-    CreateLike: {
+    Like: {
       did: 'did:plc:ovwabcu6febdpxar2diytg2s',
       kind: 'commit',
       time: new Date('2022-10-19T23:28:22.061769Z'),
@@ -64,7 +64,7 @@ const BLUESKY_SCHEMA = {
       subject_cid: 'bafyreifvpyzaq5i5wtfe2okbqfc67huiysqpahrzqu5qhe443f4crpvaw4',
       subject_uri: 'at://did:plc:dekcamj33b4raprbyvflrzkd/app.bsky.feed.post/3lwmd7o3wes2m',
     },
-    CreateRepost: {
+    Repost: {
       did: 'did:plc:ovwabcu6febdpxar2diytg2s',
       kind: 'commit',
       time: new Date('2022-10-19T23:28:22.061769Z'),

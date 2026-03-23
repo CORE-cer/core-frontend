@@ -150,7 +150,7 @@ export const schemaSpecificFAQ: SchemaSpecificFAQ = {
       {
         id: 'bluesky-event-types',
         question: 'What event types are available in the Bluesky stream?',
-        answer: 'Bluesky events include CreatePost, CreateFollow, CreateLike, and CreateRepost. Each represents different user interactions on the social platform.',
+        answer: 'Bluesky events include Post, Follow, Like, and Repost. Each represents different user interactions on the social platform.',
         category: 'events'
       },
       {
@@ -174,7 +174,7 @@ export const schemaSpecificFAQ: SchemaSpecificFAQ = {
       {
         id: 'bluesky-content-fields',
         question: 'What content information is available?',
-        answer: 'CreatePost events include text content, language information (langs), and metadata. Other events include references to posts via subject_uri and subject_cid fields.',
+        answer: 'Post events include text content, language information (langs), and metadata. Other events include references to posts via subject_uri and subject_cid fields.',
         category: 'content'
       },
       {
