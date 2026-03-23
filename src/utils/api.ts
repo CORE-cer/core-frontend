@@ -33,7 +33,7 @@ export async function getQueryInfos(): Promise<QueryIdToQueryInfoMap> {
   const activeQueryInfos = queries.filter((query) => query.active);
   const res: QueryIdToQueryInfoMap = new Map();
   for (const getQueryInfo of activeQueryInfos) {
-    const queryId = getQueryInfo.result_handler_identifier as QueryId;
+    const queryId = getQueryInfo.query_id as QueryId;
     const queryInfo: QueryInfo = {
       ...getQueryInfo,
       queryId,
