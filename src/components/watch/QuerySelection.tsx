@@ -59,7 +59,7 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
           <Checkbox
             color="default"
             checked={checked}
-            className={`color-${(Number(query.result_handler_identifier) % MAX_COLORS).toString()}`}
+            className={`color-${(Number(query.queryId) % MAX_COLORS).toString()}`}
             disableFocusRipple
             disableTouchRipple
             size="small"
