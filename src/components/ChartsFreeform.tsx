@@ -1,7 +1,7 @@
-import { COLORS, MAX_COLORS } from '@/colors';
+import { useChartData } from '@/hooks/useChartData';
 import type { QueryIdToQueryInfoMap, QueryIdToQueryStatMap } from '@/types';
 import { Box } from '@mui/material';
-import { type RefObject, useMemo, useRef, useState } from 'react';
+import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 
 import DonutChart from './DonutChart';
 import DraggableChart from './DraggableChart';
@@ -13,12 +13,28 @@ type ChartsProps = {
   queries: QueryIdToQueryInfoMap;
 };
 
+type ChartId = 'hits-per-sec' | 'complex-events-per-sec' | 'total-hits' | 'total-complex-events';
+
 type ChartItem = {
-  id: string;
+  id: ChartId;
   title: string;
   component: React.ReactNode;
   position: { x: number; y: number };
   size: { width: number; height: number };
+};
+
+const INITIAL_POSITIONS: Record<ChartId, { position: { x: number; y: number }; size: { width: number; height: number } }> = {
+  'hits-per-sec': { position: { x: 20, y: 20 }, size: { width: 400, height: 300 } },
+  'complex-events-per-sec': { position: { x: 440, y: 20 }, size: { width: 400, height: 300 } },
+  'total-hits': { position: { x: 20, y: 400 }, size: { width: 400, height: 300 } },
+  'total-complex-events': { position: { x: 440, y: 400 }, size: { width: 400, height: 300 } },
+};
+
+const CHART_TITLES: Record<ChartId, string> = {
+  'hits-per-sec': 'Hits per sec',
+  'complex-events-per-sec': 'Complex events per sec',
+  'total-hits': 'Total hits',
+  'total-complex-events': 'Total Complex Events',
 };
 
 const ChartsFreeform: React.FC<ChartsProps> = ({ qid2Stats, queries }) => {
@@ -30,161 +46,58 @@ const ChartsFreeform: React.FC<ChartsProps> = ({ qid2Stats, queries }) => {
     return justResizedRefs.current[chartId];
   };
 
-  const common = useMemo(() => {
-    const res = { colors: [] as string[], labels: [] as string[] };
+  const { common, donutSeries, lineSeries } = useChartData(qid2Stats, queries);
 
-    for (const qid of qid2Stats.keys()) {
-      const queryInfo = queries.get(qid);
-      if (!queryInfo) {
-        continue;
-      }
-      const color = COLORS[Number(qid) % MAX_COLORS] as string;
-      res.colors.push(color);
-      res.labels.push(queryInfo.query_name);
-    }
+  const chartComponents = useMemo<Record<ChartId, React.ReactNode>>(
+    () => ({
+      'hits-per-sec': (
+        <ResponsiveChartWrapper>
+          <LineChart series={lineSeries.hitsPerSec} colors={common.colors} />
+        </ResponsiveChartWrapper>
+      ),
+      'complex-events-per-sec': (
+        <ResponsiveChartWrapper>
+          <LineChart series={lineSeries.complexEventsPerSec} colors={common.colors} />
+        </ResponsiveChartWrapper>
+      ),
+      'total-hits': (
+        <ResponsiveChartWrapper>
+          <DonutChart series={donutSeries.totalHits} labels={common.labels} colors={common.colors} />
+        </ResponsiveChartWrapper>
+      ),
+      'total-complex-events': (
+        <ResponsiveChartWrapper>
+          <DonutChart series={donutSeries.totalComplexEvents} labels={common.labels} colors={common.colors} />
+        </ResponsiveChartWrapper>
+      ),
+    }),
+    [lineSeries, donutSeries, common]
+  );
 
-    return res;
-  }, [qid2Stats, queries]);
-
-  const donutSeries = useMemo(() => {
-    const res = {
-      totalHits: [] as number[],
-      totalComplexEvents: [] as number[],
-    };
-    for (const queryStats of qid2Stats.values()) {
-      res.totalHits.push(queryStats.hitStats.total);
-      res.totalComplexEvents.push(queryStats.complexEventStats.total);
-    }
-    return res;
-  }, [qid2Stats]);
-
-  const lineSeries = useMemo(() => {
-    const res = {
-      hitsPerSec: [] as {
-        name: string;
-        data: { x: Date; y: number }[];
-      }[],
-      complexEventsPerSec: [] as {
-        name: string;
-        data: { x: Date; y: number }[];
-      }[],
-    };
-    for (const [queryId, queryStats] of qid2Stats.entries()) {
-      const queryInfo = queries.get(queryId);
-      if (!queryInfo) {
-        continue;
-      }
-      res.hitsPerSec.push({
-        name: queryInfo.query_name,
-        data: queryStats.perSec.map((s) => ({ x: s.time, y: s.numHits })),
-      });
-      res.complexEventsPerSec.push({
-        name: queryInfo.query_name,
-        data: queryStats.perSec.map((s) => ({ x: s.time, y: s.numComplexEvents })),
-      });
-    }
-    return res;
-  }, [qid2Stats, queries]);
-
-  const initialCharts: ChartItem[] = useMemo(
-    () => [
-      {
-        id: 'hits-per-sec',
-        title: 'Hits per sec',
-        component: (
-          <ResponsiveChartWrapper>
-            <LineChart series={lineSeries.hitsPerSec} colors={common.colors} />
-          </ResponsiveChartWrapper>
-        ),
-        position: { x: 20, y: 20 },
-        size: { width: 400, height: 300 },
-      },
-      {
-        id: 'complex-events-per-sec',
-        title: 'Complex events per sec',
-        component: (
-          <ResponsiveChartWrapper>
-            <LineChart series={lineSeries.complexEventsPerSec} colors={common.colors} />
-          </ResponsiveChartWrapper>
-        ),
-        position: { x: 440, y: 20 },
-        size: { width: 400, height: 300 },
-      },
-      {
-        id: 'total-hits',
-        title: 'Total hits',
-        component: (
-          <ResponsiveChartWrapper>
-            <DonutChart series={donutSeries.totalHits} labels={common.labels} colors={common.colors} />
-          </ResponsiveChartWrapper>
-        ),
-        position: { x: 20, y: 400 },
-        size: { width: 400, height: 300 },
-      },
-      {
-        id: 'total-complex-events',
-        title: 'Total Complex Events',
-        component: (
-          <ResponsiveChartWrapper>
-            <DonutChart series={donutSeries.totalComplexEvents} labels={common.labels} colors={common.colors} />
-          </ResponsiveChartWrapper>
-        ),
-        position: { x: 440, y: 400 },
-        size: { width: 400, height: 300 },
-      },
-    ],
-    [common.colors, common.labels, donutSeries.totalComplexEvents, donutSeries.totalHits, lineSeries.complexEventsPerSec, lineSeries.hitsPerSec]
+  const initialCharts = useMemo<ChartItem[]>(
+    () =>
+      (Object.keys(INITIAL_POSITIONS) as ChartId[]).map((id) => ({
+        id,
+        title: CHART_TITLES[id],
+        component: chartComponents[id],
+        ...INITIAL_POSITIONS[id],
+      })),
+    // Only run once on mount — positions are seeded from constants
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const [charts, setCharts] = useState<ChartItem[]>(initialCharts);
 
-  // Update chart components when data changes, but preserve positions
-  useMemo(() => {
+  // Update chart components when data changes, but preserve user's drag/resize state
+  useEffect(() => {
     setCharts((prevCharts) =>
-      prevCharts.map((chart) => {
-        switch (chart.id) {
-          case 'hits-per-sec':
-            return {
-              ...chart,
-              component: (
-                <ResponsiveChartWrapper>
-                  <LineChart series={lineSeries.hitsPerSec} colors={common.colors} />
-                </ResponsiveChartWrapper>
-              ),
-            };
-          case 'complex-events-per-sec':
-            return {
-              ...chart,
-              component: (
-                <ResponsiveChartWrapper>
-                  <LineChart series={lineSeries.complexEventsPerSec} colors={common.colors} />
-                </ResponsiveChartWrapper>
-              ),
-            };
-          case 'total-hits':
-            return {
-              ...chart,
-              component: (
-                <ResponsiveChartWrapper>
-                  <DonutChart series={donutSeries.totalHits} labels={common.labels} colors={common.colors} />
-                </ResponsiveChartWrapper>
-              ),
-            };
-          case 'total-complex-events':
-            return {
-              ...chart,
-              component: (
-                <ResponsiveChartWrapper>
-                  <DonutChart series={donutSeries.totalComplexEvents} labels={common.labels} colors={common.colors} />
-                </ResponsiveChartWrapper>
-              ),
-            };
-          default:
-            return chart;
-        }
-      })
+      prevCharts.map((chart) => ({
+        ...chart,
+        component: chartComponents[chart.id],
+      }))
     );
-  }, [lineSeries, donutSeries, common]);
+  }, [chartComponents]);
 
   const handleDragEnd = (id: string, newPosition: { x: number; y: number }) => {
     setCharts((prevCharts) => prevCharts.map((chart) => (chart.id === id ? { ...chart, position: newPosition } : chart)));
