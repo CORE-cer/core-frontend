@@ -13,7 +13,6 @@ import './monaco/setup';
 import DarkModeProvider from './providers/DarkModeProvider.tsx';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
-import './style.scss';
 
 // Create a new router instance
 const router = createRouter({

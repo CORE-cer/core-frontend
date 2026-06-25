@@ -1,4 +1,4 @@
-import { MAX_COLORS } from '@/colors';
+import { getQueryColor } from '@/colors';
 import type { QueryId, QueryIdToQueryInfoMap, QueryInfo } from '@/types';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -57,13 +57,18 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
           }}
         >
           <Checkbox
-            color="default"
             checked={checked}
-            className={`color-${(Number(query.queryId) % MAX_COLORS).toString()}`}
             disableFocusRipple
             disableTouchRipple
             size="small"
-            sx={{ p: 0.5, ml: -0.5 }}
+            sx={{
+              p: 0.5,
+              ml: -0.5,
+              color: getQueryColor(Number(query.queryId)),
+              '&.Mui-checked': {
+                color: getQueryColor(Number(query.queryId)),
+              },
+            }}
           />
           <Tooltip title={query.query_name} arrow placement="top">
             <ListItemText 
