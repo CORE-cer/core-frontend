@@ -1,4 +1,5 @@
 import type { FormattedHit, FormattedMarkedComplexEvent } from '@/types';
+import { formatTime } from '@/utils/formatTime';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 
 type HitDetailsProps = {
@@ -7,15 +8,6 @@ type HitDetailsProps = {
 };
 
 const HitDetails: React.FC<HitDetailsProps> = ({ hit, selectedComplexEvent }) => {
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      fractionalSecondDigits: 3,
-    });
-  };
 
   return (
     <Box sx={{ height: '100%', overflow: 'auto', p: 2 }}>

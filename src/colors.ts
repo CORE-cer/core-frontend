@@ -18,3 +18,7 @@ export const COLORS = [
 ] as const;
 
 export const MAX_COLORS: number = COLORS.length;
+
+export function getQueryColor(queryId: number): string {
+  return COLORS[queryId % MAX_COLORS] as string;
+}

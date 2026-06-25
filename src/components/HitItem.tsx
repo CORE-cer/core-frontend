@@ -1,7 +1,9 @@
-import { COLORS, MAX_COLORS } from '@/colors';
+import { getQueryColor } from '@/colors';
 import type { FormattedHit, FormattedMarkedComplexEvent, QueryId } from '@/types';
+import { formatTime } from '@/utils/formatTime';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Card, CardContent, Chip, Collapse, IconButton, Paper, Stack, Typography, styled } from '@mui/material';
+import type { IconButtonProps } from '@mui/material';
 import { memo } from 'react';
 
 type HitItemProps = {
@@ -16,10 +18,11 @@ type HitItemProps = {
   onExpandedChange: (expanded: boolean) => void;
 };
 
-const ExpandMore = styled((props: any) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
+type ExpandMoreProps = IconButtonProps & { expand: boolean };
+
+const ExpandMore = styled(({ expand: _, ...other }: ExpandMoreProps) => (
+  <IconButton {...other} />
+))(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
@@ -29,22 +32,11 @@ const ExpandMore = styled((props: any) => {
 
 const HitItem = memo(
   function HitItem({ qid, queryName, data, onHitClick, onComplexEventClick, selected, selectedComplexEventIndex, expanded, onExpandedChange }: HitItemProps) {
-    const colorIndex = Number(qid) % MAX_COLORS;
-    const color = COLORS[colorIndex];
+    const color = getQueryColor(Number(qid));
 
     const handleExpandClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       onExpandedChange(!expanded);
-    };
-
-    const formatTime = (date: Date) => {
-      return date.toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        fractionalSecondDigits: 3,
-      });
     };
 
     const firstEvent = data.complexEvents[0];
@@ -159,7 +151,14 @@ const HitItem = memo(
     );
   },
   (prevProps, nextProps) => {
-    return JSON.stringify(prevProps) === JSON.stringify(nextProps);
+    return (
+      prevProps.qid === nextProps.qid &&
+      prevProps.queryName === nextProps.queryName &&
+      prevProps.data === nextProps.data &&
+      prevProps.selected === nextProps.selected &&
+      prevProps.selectedComplexEventIndex === nextProps.selectedComplexEventIndex &&
+      prevProps.expanded === nextProps.expanded
+    );
   }
 );
 

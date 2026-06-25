@@ -1,23 +1,6 @@
-import { MAX_COLORS } from '@/colors';
-import type { QueryId, QueryIdToQueryInfoMap, QueryIdToQueryStatMap, QueryInfo } from '@/types';
+import { getQueryColor } from '@/colors';
+import type { QueryId, QueryIdToQueryInfoMap, QueryIdToQueryStatMap, QueryInfo, QueryStats } from '@/types';
 import { Box, Divider, Grid2 as Grid, Paper, Typography } from '@mui/material';
-
-type HitStats = {
-  max: number;
-  total: number;
-};
-
-type PerSecStat = {
-  numHits: number;
-  numComplexEvents: number;
-  time: Date;
-};
-
-type QueryStats = {
-  perSec: PerSecStat[];
-  hitStats: HitStats;
-  complexEventStats: HitStats;
-};
 
 type QueryStatProps = {
   query?: QueryInfo;
@@ -44,7 +27,6 @@ function QueryStat({ query, qid, stats }: QueryStatProps) {
   return (
     <Paper sx={{ py: 2, px: 1, textAlign: 'center' }} elevation={2}>
       <Box
-        className={`bg-${(Number(qid) % MAX_COLORS).toString()}`}
         sx={{
           height: 16,
           marginX: -1,
@@ -52,6 +34,7 @@ function QueryStat({ query, qid, stats }: QueryStatProps) {
           borderTopLeftRadius: 4,
           borderTopRightRadius: 4,
           mb: 1,
+          backgroundColor: getQueryColor(Number(qid)),
         }}
       ></Box>
       <Typography sx={{ pb: 1 }} variant="h6">
