@@ -49,7 +49,6 @@ function formatComplexEvent(complexEvent: z.infer<typeof ComplexEventSchema>, qu
 }
 
 function formatEvent(event: z.infer<typeof EventDataSchema>, markedVariable: string, queryInfo: QueryInfo, streamInfo: StreamInfo): FormattedComplexEvent {
-  console.log('qqqq', queryInfo);
   const attribute_names: string[] = [];
   let eventType: string | undefined = undefined;
   if (markedVariable.includes('>')) {
@@ -80,7 +79,6 @@ function formatEvent(event: z.infer<typeof EventDataSchema>, markedVariable: str
   // If no projection, use the streams default attributes
   if (attribute_names.length === 0) {
     for (const eventInfo of streamInfo.events_info) {
-      console.log(eventInfo.name, eventType);
       if (eventInfo.name === eventType) {
         attribute_names.push(...eventInfo.attributes_info.map((attr) => attr.name));
         break;
