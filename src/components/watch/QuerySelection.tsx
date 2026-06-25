@@ -1,5 +1,6 @@
 import { getQueryColor } from '@/colors';
-import type { QueryId, QueryIdToQueryInfoMap, QueryInfo } from '@/types';
+import { useWatchPageContext } from '@/context/WatchPageContext';
+import type { QueryId, QueryInfo } from '@/types';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CodeIcon from '@mui/icons-material/Code';
@@ -19,10 +20,6 @@ type QuerySelectionItemProps = {
 };
 
 type QuerySelectionProps = {
-  queries: QueryIdToQueryInfoMap;
-  selectedQueryIds: Set<QueryId>;
-  setSelectedQueryIds: React.Dispatch<React.SetStateAction<Set<QueryId>>>;
-  onInactivateQuery: (queryId: QueryId) => void;
   isExpanded?: boolean;
   onToggleExpanded?: () => void;
 };
@@ -138,7 +135,8 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
   );
 }
 
-export function QuerySelection({ queries, selectedQueryIds, setSelectedQueryIds, onInactivateQuery, isExpanded = false, onToggleExpanded }: QuerySelectionProps) {
+export function QuerySelection({ isExpanded = false, onToggleExpanded }: QuerySelectionProps) {
+  const { queries, selectedQueryIds, setSelectedQueryIds, handleInactivateQuery: onInactivateQuery } = useWatchPageContext();
   const handleSelectSingleQuery = (queryId: QueryId) => {
     setSelectedQueryIds((prev) => {
       const next = new Set(prev);

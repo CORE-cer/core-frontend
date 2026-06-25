@@ -1,5 +1,5 @@
+import { useWatchPageContext } from '@/context/WatchPageContext';
 import { useChartData } from '@/hooks/useChartData';
-import type { QueryIdToQueryInfoMap, QueryIdToQueryStatMap } from '@/types';
 import { Box } from '@mui/material';
 import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -7,11 +7,6 @@ import DonutChart from './DonutChart';
 import DraggableChart from './DraggableChart';
 import LineChart from './LineChart';
 import ResponsiveChartWrapper from './ResponsiveChartWrapper';
-
-type ChartsProps = {
-  qid2Stats: QueryIdToQueryStatMap;
-  queries: QueryIdToQueryInfoMap;
-};
 
 type ChartId = 'hits-per-sec' | 'complex-events-per-sec' | 'total-hits' | 'total-complex-events';
 
@@ -37,7 +32,8 @@ const CHART_TITLES: Record<ChartId, string> = {
   'total-complex-events': 'Total Complex Events',
 };
 
-const ChartsFreeform: React.FC<ChartsProps> = ({ qid2Stats, queries }) => {
+const ChartsFreeform: React.FC = () => {
+  const { queryIdToQueryStat, queries } = useWatchPageContext();
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const justResizedRefs = useRef<Record<string, RefObject<boolean>>>({});
 
@@ -46,7 +42,7 @@ const ChartsFreeform: React.FC<ChartsProps> = ({ qid2Stats, queries }) => {
     return justResizedRefs.current[chartId];
   };
 
-  const { common, donutSeries, lineSeries } = useChartData(qid2Stats, queries);
+  const { common, donutSeries, lineSeries } = useChartData(queryIdToQueryStat, queries);
 
   const chartComponents = useMemo<Record<ChartId, React.ReactNode>>(
     () => ({

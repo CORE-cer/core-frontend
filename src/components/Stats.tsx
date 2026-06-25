@@ -1,16 +1,12 @@
 import { getQueryColor } from '@/colors';
-import type { QueryId, QueryIdToQueryInfoMap, QueryIdToQueryStatMap, QueryInfo, QueryStats } from '@/types';
+import { useWatchPageContext } from '@/context/WatchPageContext';
+import type { QueryId, QueryInfo, QueryStats } from '@/types';
 import { Box, Divider, Grid2 as Grid, Paper, Typography } from '@mui/material';
 
 type QueryStatProps = {
   query?: QueryInfo;
   qid: QueryId;
   stats: QueryStats;
-};
-
-type StatsProps = {
-  queryIdToQueryStatMap: QueryIdToQueryStatMap;
-  queryIdToQueryInfoMap: QueryIdToQueryInfoMap;
 };
 
 function QueryStat({ query, qid, stats }: QueryStatProps) {
@@ -84,7 +80,8 @@ function QueryStat({ query, qid, stats }: QueryStatProps) {
   );
 }
 
-export default function Stats({ queryIdToQueryStatMap, queryIdToQueryInfoMap }: StatsProps) {
+export default function Stats() {
+  const { queryIdToQueryStat: queryIdToQueryStatMap, queries: queryIdToQueryInfoMap } = useWatchPageContext();
   return (
     <Grid container sx={{ p: 1 }} spacing={2}>
       {Array.from(queryIdToQueryStatMap, ([queryId, queryStats]) => (

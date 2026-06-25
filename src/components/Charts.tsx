@@ -1,16 +1,11 @@
+import { useWatchPageContext } from '@/context/WatchPageContext';
 import { useChartData } from '@/hooks/useChartData';
-import type { QueryIdToQueryInfoMap, QueryIdToQueryStatMap } from '@/types';
 import { Box, Paper, Typography } from '@mui/material';
 import { Reorder } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 
 import DonutChart from './DonutChart';
 import LineChart from './LineChart';
-
-type ChartsProps = {
-  qid2Stats: QueryIdToQueryStatMap;
-  queries: QueryIdToQueryInfoMap;
-};
 
 type ChartId = 'hits-per-sec' | 'complex-events-per-sec' | 'total-hits' | 'total-complex-events';
 
@@ -26,8 +21,9 @@ const INITIAL_ORDER: ChartItem[] = [
   { id: 'total-complex-events', title: 'Total Complex Events' },
 ];
 
-const Charts: React.FC<ChartsProps> = ({ qid2Stats, queries }) => {
-  const { common, donutSeries, lineSeries } = useChartData(qid2Stats, queries);
+const Charts: React.FC = () => {
+  const { queryIdToQueryStat, queries } = useWatchPageContext();
+  const { common, donutSeries, lineSeries } = useChartData(queryIdToQueryStat, queries);
 
   const [chartOrder, setChartOrder] = useState<ChartItem[]>(INITIAL_ORDER);
 

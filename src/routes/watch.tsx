@@ -4,7 +4,7 @@ import HitList from '@/components/HitList';
 import Stats from '@/components/Stats';
 import Timeline from '@/components/Timeline';
 import QuerySelection from '@/components/watch/QuerySelection';
-import { useWatchPage } from '@/hooks/useWatchPage';
+import { WatchPageProvider, useWatchPageContext } from '@/context/WatchPageContext';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { Box, Divider, IconButton, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
@@ -15,38 +15,17 @@ const SIDE_PANEL_WIDTH_COLLAPSED = 250;
 const SIDE_PANEL_WIDTH_EXPANDED = 400;
 
 export const Route = createFileRoute('/watch')({
-  component: RouteComponent,
+  component: () => (
+    <WatchPageProvider>
+      <WatchPageContent />
+    </WatchPageProvider>
+  ),
 });
 
-function RouteComponent() {
-  const {
-    queries,
-    selectedQueryIds,
-    setSelectedQueryIds,
-    data,
-    queryIdToQueryStat,
-    viewMode,
-    eventInterval,
-    setEventInterval,
-    handleViewModeChange,
-    handleInactivateQuery,
-    // Timeline-specific properties
-    timelineConfig,
-    updateTimeHorizon,
-    getAllActiveQueryEvents,
-    clearData,
-  } = useWatchPage();
-
+function WatchPageContent() {
+  const { viewMode, handleViewModeChange } = useWatchPageContext();
   const [chartLayoutMode, setChartLayoutMode] = useState<'list' | 'freeform'>('list');
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-
-  const handleChartLayoutChange = () => {
-    setChartLayoutMode((prev) => (prev === 'list' ? 'freeform' : 'list'));
-  };
-
-  const handleToggleSidebar = () => {
-    setSidebarExpanded((prev) => !prev);
-  };
 
   const sidebarWidth = sidebarExpanded ? SIDE_PANEL_WIDTH_EXPANDED : SIDE_PANEL_WIDTH_COLLAPSED;
 
@@ -65,12 +44,8 @@ function RouteComponent() {
           }}
         >
           <QuerySelection
-            queries={queries}
-            selectedQueryIds={selectedQueryIds}
-            setSelectedQueryIds={setSelectedQueryIds}
-            onInactivateQuery={handleInactivateQuery}
             isExpanded={sidebarExpanded}
-            onToggleExpanded={handleToggleSidebar}
+            onToggleExpanded={() => { setSidebarExpanded((prev) => !prev); }}
           />
         </Box>
 
@@ -103,7 +78,7 @@ function RouteComponent() {
 
             {viewMode === 'charts' && (
               <Tooltip title={`Switch to ${chartLayoutMode === 'list' ? 'freeform' : 'list'} layout`}>
-                <IconButton onClick={handleChartLayoutChange} size="small">
+                <IconButton onClick={() => { setChartLayoutMode((prev) => (prev === 'list' ? 'freeform' : 'list')); }} size="small">
                   {chartLayoutMode === 'list' ? <GridViewIcon /> : <DragHandleIcon />}
                 </IconButton>
               </Tooltip>
@@ -112,21 +87,15 @@ function RouteComponent() {
           <Divider />
           <Box sx={{ flex: 1, overflow: 'auto', height: '100%' }}>
             {viewMode === 'list' ? (
-              <HitList data={data} queryIdToQueryInfoMap={queries} eventInterval={eventInterval} setEventInterval={setEventInterval} onClearData={clearData} />
+              <HitList />
             ) : viewMode === 'stats' ? (
-              <Stats queryIdToQueryStatMap={queryIdToQueryStat} queryIdToQueryInfoMap={queries} />
+              <Stats />
             ) : viewMode === 'timeline' ? (
-              <Timeline
-                queryIdToQueryInfoMap={queries}
-                selectedQueryIds={selectedQueryIds}
-                getAllActiveQueryEvents={getAllActiveQueryEvents}
-                timeHorizonSeconds={timelineConfig.timeHorizonSeconds}
-                onTimeHorizonChange={updateTimeHorizon}
-              />
+              <Timeline />
             ) : chartLayoutMode === 'list' ? (
-              <Charts qid2Stats={queryIdToQueryStat} queries={queries} />
+              <Charts />
             ) : (
-              <ChartsFreeform qid2Stats={queryIdToQueryStat} queries={queries} />
+              <ChartsFreeform />
             )}
           </Box>
         </Box>

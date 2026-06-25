@@ -1,4 +1,5 @@
-import type { QueryId, QueryIdToQueryInfoMap, TimelineEvent } from '@/types';
+import { useWatchPageContext } from '@/context/WatchPageContext';
+import type { QueryId, TimelineEvent } from '@/types';
 import { Box, Slider, Typography } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -6,21 +7,9 @@ import TimelineEventComponent from './TimelineEvent';
 
 const MAX_VISIBLE_EVENTS_PER_QUERY = 100;
 
-type TimelineProps = {
-  queryIdToQueryInfoMap: QueryIdToQueryInfoMap;
-  selectedQueryIds: Set<QueryId>;
-  getAllActiveQueryEvents: () => Map<QueryId, TimelineEvent[]>;
-  timeHorizonSeconds: number;
-  onTimeHorizonChange: (seconds: number) => void;
-};
-
-export default function Timeline({
-  queryIdToQueryInfoMap,
-  selectedQueryIds,
-  getAllActiveQueryEvents,
-  timeHorizonSeconds,
-  onTimeHorizonChange,
-}: TimelineProps) {
+export default function Timeline() {
+  const { queries: queryIdToQueryInfoMap, selectedQueryIds, getAllActiveQueryEvents, timelineConfig, updateTimeHorizon: onTimeHorizonChange } = useWatchPageContext();
+  const timeHorizonSeconds = timelineConfig.timeHorizonSeconds;
   const [visibleEvents, setVisibleEvents] = useState<Map<QueryId, TimelineEvent[]>>(new Map());
   const containerRefsMap = useRef<Map<QueryId, HTMLDivElement | null>>(new Map());
   const rafRef = useRef<number | null>(null);

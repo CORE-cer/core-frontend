@@ -1,4 +1,5 @@
-import type { DataItem, FormattedHit, FormattedMarkedComplexEvent, QueryIdToQueryInfoMap } from '@/types';
+import { useWatchPageContext } from '@/context/WatchPageContext';
+import type { DataItem, FormattedHit, FormattedMarkedComplexEvent } from '@/types';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
@@ -13,14 +14,6 @@ import HitItem from './HitItem';
 type EventIntervalSelectorProps = {
   value: number;
   setValue: (value: number) => void;
-};
-
-type HitListProps = {
-  data: DataItem[];
-  queryIdToQueryInfoMap: QueryIdToQueryInfoMap;
-  eventInterval: number;
-  setEventInterval: (value: number) => void;
-  onClearData: () => void;
 };
 
 const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, setValue }) => {
@@ -73,7 +66,8 @@ const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, se
   );
 };
 
-const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInterval, setEventInterval, onClearData }) => {
+const HitList: React.FC = () => {
+  const { data, queries: queryIdToQueryInfoMap, eventInterval, setEventInterval, clearData: onClearData } = useWatchPageContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [selectedHit, setSelectedHit] = useState<FormattedHit | null>(null);
   const [selectedComplexEvent, setSelectedComplexEvent] = useState<FormattedMarkedComplexEvent | null>(null);
