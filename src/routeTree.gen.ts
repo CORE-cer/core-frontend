@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchRouteImport } from './routes/watch'
+import { Route as StreamsRouteImport } from './routes/streams'
 import { Route as QueryRouteImport } from './routes/query'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AboutRouteImport } from './routes/about'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const WatchRoute = WatchRouteImport.update({
   id: '/watch',
   path: '/watch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreamsRoute = StreamsRouteImport.update({
+  id: '/streams',
+  path: '/streams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QueryRoute = QueryRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/query': typeof QueryRoute
+  '/streams': typeof StreamsRoute
   '/watch': typeof WatchRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/query': typeof QueryRoute
+  '/streams': typeof StreamsRoute
   '/watch': typeof WatchRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/query': typeof QueryRoute
+  '/streams': typeof StreamsRoute
   '/watch': typeof WatchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/faq' | '/query' | '/watch'
+  fullPaths: '/' | '/about' | '/faq' | '/query' | '/streams' | '/watch'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/faq' | '/query' | '/watch'
-  id: '__root__' | '/' | '/about' | '/faq' | '/query' | '/watch'
+  to: '/' | '/about' | '/faq' | '/query' | '/streams' | '/watch'
+  id: '__root__' | '/' | '/about' | '/faq' | '/query' | '/streams' | '/watch'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +85,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   FaqRoute: typeof FaqRoute
   QueryRoute: typeof QueryRoute
+  StreamsRoute: typeof StreamsRoute
   WatchRoute: typeof WatchRoute
 }
 
@@ -86,6 +96,13 @@ declare module '@tanstack/react-router' {
       path: '/watch'
       fullPath: '/watch'
       preLoaderRoute: typeof WatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams': {
+      id: '/streams'
+      path: '/streams'
+      fullPath: '/streams'
+      preLoaderRoute: typeof StreamsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/query': {
@@ -124,6 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   FaqRoute: FaqRoute,
   QueryRoute: QueryRoute,
+  StreamsRoute: StreamsRoute,
   WatchRoute: WatchRoute,
 }
 export const routeTree = rootRouteImport
