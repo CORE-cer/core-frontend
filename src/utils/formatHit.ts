@@ -7,18 +7,24 @@ import {
   HitSchema,
   type QueryInfo,
   type StreamInfo,
-} from '@/types';
-import { z } from 'zod';
+} from "@/types";
+import { z } from "zod";
 
-export function formatHit(hit: z.infer<typeof HitSchema>, queryInfo: QueryInfo, streamsInfo: StreamInfo[]): FormattedHit {
+export function formatHit(
+  hit: z.infer<typeof HitSchema>,
+  queryInfo: QueryInfo,
+  streamsInfo: StreamInfo[],
+): FormattedHit {
   if (!hit[0]) {
-    throw new Error('Invalid hit format');
+    throw new Error("Invalid hit format");
   }
   const end = hit[0];
 
-  const complexEvents: FormattedMarkedComplexEvent[] = hit.map((complexEvent) => {
-    return formatComplexEvent(complexEvent, queryInfo, streamsInfo);
-  });
+  const complexEvents: FormattedMarkedComplexEvent[] = hit.map(
+    (complexEvent) => {
+      return formatComplexEvent(complexEvent, queryInfo, streamsInfo);
+    },
+  );
 
   return {
     end: new Date(end.end / 1000000),
@@ -26,19 +32,29 @@ export function formatHit(hit: z.infer<typeof HitSchema>, queryInfo: QueryInfo, 
   };
 }
 
-function formatComplexEvent(complexEvent: z.infer<typeof ComplexEventSchema>, queryInfo: QueryInfo, streamsInfo: StreamInfo[]): FormattedMarkedComplexEvent {
+function formatComplexEvent(
+  complexEvent: z.infer<typeof ComplexEventSchema>,
+  queryInfo: QueryInfo,
+  streamsInfo: StreamInfo[],
+): FormattedMarkedComplexEvent {
   const eventsByMarkedVariables: Record<string, FormattedComplexEvent[]> = {};
 
   for (const markedEvent of complexEvent.events) {
     for (const [markedVariable, event] of Object.entries(markedEvent)) {
-      const streamInfo = streamsInfo.find((stream) => stream.id === event.stream_type_id);
+      const streamInfo = streamsInfo.find(
+        (stream) => stream.id === event.stream_type_id,
+      );
       if (!streamInfo) {
-        throw new Error(`Stream info not found for stream type ID ${event.stream_type_id.toString()}`);
+        throw new Error(
+          `Stream info not found for stream type ID ${event.stream_type_id.toString()}`,
+        );
       }
 
       eventsByMarkedVariables[markedVariable] ??= [];
 
-      eventsByMarkedVariables[markedVariable].push(formatEvent(event, markedVariable, queryInfo, streamInfo));
+      eventsByMarkedVariables[markedVariable].push(
+        formatEvent(event, markedVariable, queryInfo, streamInfo),
+      );
     }
   }
   return {
@@ -48,23 +64,31 @@ function formatComplexEvent(complexEvent: z.infer<typeof ComplexEventSchema>, qu
   };
 }
 
-function formatEvent(event: z.infer<typeof EventDataSchema>, markedVariable: string, queryInfo: QueryInfo, streamInfo: StreamInfo): FormattedComplexEvent {
-  console.log('qqqq', queryInfo);
+function formatEvent(
+  event: z.infer<typeof EventDataSchema>,
+  markedVariable: string,
+  queryInfo: QueryInfo,
+  streamInfo: StreamInfo,
+): FormattedComplexEvent {
   const attribute_names: string[] = [];
   let eventType: string | undefined = undefined;
-  if (markedVariable.includes('>')) {
+  if (markedVariable.includes(">")) {
     let stream: string | undefined = undefined;
-    [stream, eventType] = markedVariable.split('>');
+    [stream, eventType] = markedVariable.split(">");
     if (!stream || !eventType) {
       throw new Error(`Invalid marked variable format: ${markedVariable}`);
     }
 
     for (const projection of queryInfo.attribute_projection_stream_event) {
-      if (attribute_names.length > 0) {
-        throw new Error(`Multiple attribute projections found for stream ${stream} and event ${eventType}`);
-      }
-
-      if (projection.stream_name === stream && projection.event_name === eventType) {
+      if (
+        projection.stream_name === stream &&
+        projection.event_name === eventType
+      ) {
+        if (attribute_names.length > 0) {
+          throw new Error(
+            `Multiple attribute projections found for stream ${stream} and event ${eventType}`,
+          );
+        }
         attribute_names.push(...projection.attributes);
       }
     }
@@ -80,16 +104,19 @@ function formatEvent(event: z.infer<typeof EventDataSchema>, markedVariable: str
   // If no projection, use the streams default attributes
   if (attribute_names.length === 0) {
     for (const eventInfo of streamInfo.events_info) {
-      console.log(eventInfo.name, eventType);
       if (eventInfo.name === eventType) {
-        attribute_names.push(...eventInfo.attributes_info.map((attr) => attr.name));
+        attribute_names.push(
+          ...eventInfo.attributes_info.map((attr) => attr.name),
+        );
         break;
       }
     }
   }
 
   if (attribute_names.length === 0) {
-    throw new Error(`No attribute projections found for stream ${markedVariable}`);
+    throw new Error(
+      `No attribute projections found for stream ${markedVariable}`,
+    );
   }
   return {
     eventName: event.event_type_id.toString(),
@@ -98,10 +125,12 @@ function formatEvent(event: z.infer<typeof EventDataSchema>, markedVariable: str
       attribute_names.map((name, index) => {
         const value = event.attributes[index];
         if (value === undefined) {
-          throw new Error(`Missing value for attribute ${name} in event ${eventType}`);
+          throw new Error(
+            `Missing value for attribute ${name} in event ${eventType}`,
+          );
         }
         return [name, value];
-      })
+      }),
     ),
   };
 }

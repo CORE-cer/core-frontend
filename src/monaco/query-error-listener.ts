@@ -1,4 +1,4 @@
-import { ErrorListener, Token } from 'antlr4';
+import { ErrorListener, Token } from "antlr4";
 
 type ErrorType = {
   startLineNumber: number;
@@ -8,10 +8,18 @@ type ErrorType = {
   message: string;
   severity: number;
 };
-export default class gueryErrorListener<TSymbol> extends ErrorListener<TSymbol> {
+export default class gueryErrorListener<
+  TSymbol,
+> extends ErrorListener<TSymbol> {
   errors: ErrorType[] = [];
 
-  syntaxError(_recognizer: unknown, offendingSymbol: TSymbol, line: number, column: number, msg: string) {
+  syntaxError(
+    _recognizer: unknown,
+    offendingSymbol: TSymbol,
+    line: number,
+    column: number,
+    msg: string,
+  ) {
     if (!offendingSymbol || !(offendingSymbol instanceof Token)) {
       return;
     }

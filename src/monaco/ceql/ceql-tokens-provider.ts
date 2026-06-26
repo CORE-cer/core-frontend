@@ -1,19 +1,19 @@
-import CEQLQueryLexer from '@/grammar/ceql/CEQLQueryLexer';
-import { CharStream, Token } from 'antlr4';
+import CEQLQueryLexer from "@/grammar/ceql/CEQLQueryLexer";
+import { CharStream, Token } from "antlr4";
 
 function antlr4TokenToMonacoToken(token: Token) {
   switch (token.type) {
     case CEQLQueryLexer.SINGLE_LINE_COMMENT:
     case CEQLQueryLexer.MULTILINE_COMMENT:
-      return 'comment';
+      return "comment";
     case CEQLQueryLexer.STRING_LITERAL:
-      return 'string';
+      return "string";
     case CEQLQueryLexer.DOUBLE_LITERAL:
     case CEQLQueryLexer.INTEGER_LITERAL:
     case CEQLQueryLexer.NUMERICAL_EXPONENT:
-      return 'number';
+      return "number";
     case CEQLQueryLexer.IDENTIFIER:
-      return 'variable';
+      return "variable";
     case CEQLQueryLexer.PERCENT:
     case CEQLQueryLexer.PLUS:
     case CEQLQueryLexer.MINUS:
@@ -25,7 +25,7 @@ function antlr4TokenToMonacoToken(token: Token) {
     case CEQLQueryLexer.GEQ:
     case CEQLQueryLexer.EQ:
     case CEQLQueryLexer.NEQ:
-      return 'operator';
+      return "operator";
     case CEQLQueryLexer.K_ALL:
     case CEQLQueryLexer.K_AND:
     case CEQLQueryLexer.K_ANY:
@@ -57,9 +57,9 @@ function antlr4TokenToMonacoToken(token: Token) {
     case CEQLQueryLexer.K_UNLESS:
     case CEQLQueryLexer.K_WHERE:
     case CEQLQueryLexer.K_WITHIN:
-      return 'keyword';
+      return "keyword";
     default:
-      return '';
+      return "";
   }
 }
 

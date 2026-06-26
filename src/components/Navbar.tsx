@@ -1,12 +1,12 @@
-import { useDarkModeContext } from '@/hooks/useDarkModeContext';
-import { DRAWER_WIDTH } from '@/utils/constants.js';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import DataObjectIcon from '@mui/icons-material/DataObject';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import MenuIcon from '@mui/icons-material/Menu';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useDarkModeContext } from "@/hooks/useDarkModeContext";
+import { DRAWER_WIDTH } from "@/utils/constants.js";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import DataObjectIcon from "@mui/icons-material/DataObject";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import MenuIcon from "@mui/icons-material/Menu";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   AppBar,
   Box,
@@ -21,15 +21,15 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link as RouterLink, useLocation } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
-import type { ReactNode } from 'react';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Link as RouterLink, useLocation } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 
-import Main from './Main';
-import CORELogo from '/core.png';
+import Main from "./Main";
+import CORELogo from "/core.png";
 
 const Logo = () => {
   return (
@@ -37,15 +37,15 @@ const Logo = () => {
       component={RouterLink}
       to="/"
       sx={{
-        display: 'flex',
-        alignItems: 'ceter',
-        justifyContent: 'center',
-        textDecoration: 'none',
-        '&:hover img': {
-          filter: 'drop-shadow(#f783fb 0 0 4px)',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textDecoration: "none",
+        "&:hover img": {
+          filter: "drop-shadow(#f783fb 0 0 4px)",
         },
-        '&:hover p': {
-          textShadow: '#f783fb 0 0 8px',
+        "&:hover p": {
+          textShadow: "#f783fb 0 0 8px",
         },
       }}
     >
@@ -55,8 +55,8 @@ const Logo = () => {
         alt="CORE"
         sx={{
           height: { sm: 32, xs: 24 },
-          cursor: 'pointer',
-          '&:hover': {
+          cursor: "pointer",
+          "&:hover": {
             // filter: 'drop-shadow(#f783fb 0 0 4px)',
           },
         }}
@@ -65,10 +65,10 @@ const Logo = () => {
         component="p"
         sx={{
           ml: 0.5,
-          mt: 'auto',
+          mt: "auto",
           fontSize: 16,
           fontFamily: '"Roboto mono", monospace',
-          color: 'text.primary',
+          color: "text.primary",
         }}
       >
         Beta
@@ -109,7 +109,7 @@ type NavbarProps = {
 
 export default function Navbar({ children, renderMain = true }: NavbarProps) {
   const theme = useTheme();
-  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isBelowMd = useMediaQuery(theme.breakpoints.down("md"));
   const darkModeContext = useDarkModeContext();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -122,8 +122,12 @@ export default function Navbar({ children, renderMain = true }: NavbarProps) {
         elevation={0}
         color="transparent"
         sx={{
-          backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : theme.palette.background.paper,
-          zIndex: (theme) => (isBelowMd ? theme.zIndex.appBar : theme.zIndex.drawer + 1),
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.background.paper
+              : theme.palette.background.paper,
+          zIndex: (theme) =>
+            isBelowMd ? theme.zIndex.appBar : theme.zIndex.drawer + 1,
         }}
       >
         <Toolbar variant="dense">
@@ -140,19 +144,19 @@ export default function Navbar({ children, renderMain = true }: NavbarProps) {
             <MenuIcon />
           </IconButton>
           <Logo />
-          <Box sx={{ flexGrow: 1, display: 'flex' }} />
+          <Box sx={{ flexGrow: 1, display: "flex" }} />
           <Tooltip title="Help & FAQ">
-            <IconButton 
-              component={RouterLink}
-              to="/faq"
-              sx={{ mr: 1 }}
-            >
+            <IconButton component={RouterLink} to="/faq" sx={{ mr: 1 }}>
               <HelpOutlineIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Toggle Dark Mode" sx={{ flexGrow: 0 }}>
             <IconButton edge="end" onClick={darkModeContext.toggleDarkMode}>
-              {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+              {theme.palette.mode === "dark" ? (
+                <LightModeIcon />
+              ) : (
+                <DarkModeIcon />
+              )}
             </IconButton>
           </Tooltip>
         </Toolbar>
@@ -168,9 +172,9 @@ export default function Navbar({ children, renderMain = true }: NavbarProps) {
         sx={{
           width: DRAWER_WIDTH,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: DRAWER_WIDTH,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
       >
@@ -180,9 +184,21 @@ export default function Navbar({ children, renderMain = true }: NavbarProps) {
         <Divider />
         <List dense>
           <DrawerListItem text="Query" href="/" icon={<DataObjectIcon />} />
-          <DrawerListItem text="Watch" href="/watch" icon={<VisibilityIcon />} />
-          <DrawerListItem text="Help & FAQ" href="/faq" icon={<HelpOutlineIcon />} />
-          <DrawerListItem text="About us" href="/about" icon={<PeopleAltIcon />} />
+          <DrawerListItem
+            text="Watch"
+            href="/watch"
+            icon={<VisibilityIcon />}
+          />
+          <DrawerListItem
+            text="Help & FAQ"
+            href="/faq"
+            icon={<HelpOutlineIcon />}
+          />
+          <DrawerListItem
+            text="About us"
+            href="/about"
+            icon={<PeopleAltIcon />}
+          />
         </List>
       </Drawer>
       {renderMain && <Main permanentDrawer={false}>{children}</Main>}

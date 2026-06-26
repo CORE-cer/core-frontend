@@ -1,31 +1,43 @@
-import type { DataItem, FormattedHit, FormattedMarkedComplexEvent, QueryIdToQueryInfoMap } from '@/types';
-import ClearAllIcon from '@mui/icons-material/ClearAll';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { Box, Button, ButtonGroup, Divider, Fab, Fade, FormControlLabel, Slider, Switch, Tooltip, Typography } from '@mui/material';
-import { useRef, useState } from 'react';
-import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
+import { useWatchPageContext } from "@/context/WatchPageContext";
+import type {
+  DataItem,
+  FormattedHit,
+  FormattedMarkedComplexEvent,
+} from "@/types";
+import ClearAllIcon from "@mui/icons-material/ClearAll";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import UnfoldLessIcon from "@mui/icons-material/UnfoldLess";
+import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Divider,
+  Fab,
+  Fade,
+  FormControlLabel,
+  Slider,
+  Switch,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { useRef, useState } from "react";
+import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
 
-import HitDetails from './HitDetails';
-import HitItem from './HitItem';
+import HitDetails from "./HitDetails";
+import HitItem from "./HitItem";
 
 type EventIntervalSelectorProps = {
   value: number;
   setValue: (value: number) => void;
 };
 
-type HitListProps = {
-  data: DataItem[];
-  queryIdToQueryInfoMap: QueryIdToQueryInfoMap;
-  eventInterval: number;
-  setEventInterval: (value: number) => void;
-  onClearData: () => void;
-};
-
-const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, setValue }) => {
+const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({
+  value,
+  setValue,
+}) => {
   const valueLabelFormat = (value: number) => {
-    if (value === 0) return '0ms (Real-time)';
+    if (value === 0) return "0ms (Real-time)";
     if (value > 1000) return `${(value / 1000).toString()}s`;
     return `${value.toString()}ms`;
   };
@@ -33,13 +45,16 @@ const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, se
   const [visualValue, setVisualValue] = useState<number>(value);
 
   const handleChange = (_: Event, value: number | number[]) => {
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       setVisualValue(value);
     }
   };
 
-  const handleChangeCommitted = (_: Event | React.SyntheticEvent, value: number | number[]) => {
-    if (typeof value === 'number') {
+  const handleChangeCommitted = (
+    _: Event | React.SyntheticEvent,
+    value: number | number[],
+  ) => {
+    if (typeof value === "number") {
       setValue(value);
     }
   };
@@ -47,16 +62,16 @@ const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, se
   return (
     <Box
       sx={{
-        width: 'inherit',
+        width: "inherit",
         px: 2,
         py: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      <Typography>{'Event throttle'}</Typography>
+      <Typography>{"Event throttle"}</Typography>
       <Slider
         sx={{ maxWidth: 400 }}
         value={visualValue}
@@ -73,10 +88,18 @@ const EventIntervalSelector: React.FC<EventIntervalSelectorProps> = ({ value, se
   );
 };
 
-const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInterval, setEventInterval, onClearData }) => {
+const HitList: React.FC = () => {
+  const {
+    data,
+    queries: queryIdToQueryInfoMap,
+    eventInterval,
+    setEventInterval,
+    clearData: onClearData,
+  } = useWatchPageContext();
   const [atBottom, setAtBottom] = useState<boolean>(false);
   const [selectedHit, setSelectedHit] = useState<FormattedHit | null>(null);
-  const [selectedComplexEvent, setSelectedComplexEvent] = useState<FormattedMarkedComplexEvent | null>(null);
+  const [selectedComplexEvent, setSelectedComplexEvent] =
+    useState<FormattedMarkedComplexEvent | null>(null);
   const [defaultExpanded, setDefaultExpanded] = useState<boolean>(false);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const existingItems = useRef<Set<number>>(new Set());
@@ -86,9 +109,9 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
   const handleScrollToBottom = () => {
     if (!virtuoso.current) return;
     virtuoso.current.scrollToIndex({
-      index: 'LAST',
-      align: 'end',
-      behavior: 'auto',
+      index: "LAST",
+      align: "end",
+      behavior: "auto",
     });
   };
 
@@ -97,7 +120,10 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
     setSelectedComplexEvent(null);
   };
 
-  const handleComplexEventClick = (hit: FormattedHit, complexEvent: FormattedMarkedComplexEvent) => {
+  const handleComplexEventClick = (
+    hit: FormattedHit,
+    complexEvent: FormattedMarkedComplexEvent,
+  ) => {
     setSelectedHit(hit);
     setSelectedComplexEvent(complexEvent);
   };
@@ -130,7 +156,9 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
   };
 
   const renderHitItem = (index: number, item: DataItem) => {
-    const expanded = (!existingItems.current.has(index) && defaultExpanded) || expandedItems.has(index);
+    const expanded =
+      (!existingItems.current.has(index) && defaultExpanded) ||
+      expandedItems.has(index);
     if (expanded) {
       expandedItems.add(index);
     }
@@ -138,21 +166,37 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
     return (
       <HitItem
         qid={item.qid}
-        queryName={queryIdToQueryInfoMap.get(item.qid)?.query_name ?? 'Unknown Query'}
+        queryName={
+          queryIdToQueryInfoMap.get(item.qid)?.query_name ?? "Unknown Query"
+        }
         data={item.data}
         onHitClick={handleHitClick}
         onComplexEventClick={handleComplexEventClick}
         selected={selectedHit === item.data}
-        selectedComplexEventIndex={selectedHit === item.data && selectedComplexEvent ? item.data.complexEvents.indexOf(selectedComplexEvent) : undefined}
+        selectedComplexEventIndex={
+          selectedHit === item.data && selectedComplexEvent
+            ? item.data.complexEvents.indexOf(selectedComplexEvent)
+            : undefined
+        }
         expanded={expanded}
-        onExpandedChange={(expanded: boolean) => { handleExpandItem(index, expanded); }}
+        onExpandedChange={(expanded: boolean) => {
+          handleExpandItem(index, expanded);
+        }}
       />
     );
   };
 
   return (
-    <Box sx={{ overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Box sx={{ px: 2, py: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+    <Box
+      sx={{
+        overflow: "hidden",
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box sx={{ px: 2, py: 1, display: "flex", alignItems: "center", gap: 2 }}>
         <FormControlLabel
           control={
             <Switch
@@ -171,19 +215,33 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
           <Button startIcon={<UnfoldLessIcon />} onClick={handleCollapseAll}>
             Collapse All
           </Button>
-          <Button startIcon={<ClearAllIcon />} onClick={handleClear} color="error">
+          <Button
+            startIcon={<ClearAllIcon />}
+            onClick={handleClear}
+            color="error"
+          >
             Clear All
           </Button>
         </ButtonGroup>
         <Box sx={{ flex: 1 }}>
-          <EventIntervalSelector value={eventInterval} setValue={setEventInterval} />
+          <EventIntervalSelector
+            value={eventInterval}
+            setValue={setEventInterval}
+          />
         </Box>
       </Box>
       <Divider />
-      <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        <Box sx={{ flex: 1, overflow: 'hidden', borderRight: 1, borderColor: 'divider' }}>
+      <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <Box
+          sx={{
+            flex: 1,
+            overflow: "hidden",
+            borderRight: 1,
+            borderColor: "divider",
+          }}
+        >
           <Virtuoso
-            style={{ height: '100%' }}
+            style={{ height: "100%" }}
             overscan={50}
             ref={virtuoso}
             atBottomStateChange={(isAtBottom: boolean) => {
@@ -195,11 +253,21 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
             itemContent={renderHitItem}
           />
         </Box>
-        <Box sx={{ flex: 1, overflow: 'hidden' }}>
+        <Box sx={{ flex: 1, overflow: "hidden" }}>
           {selectedHit ? (
-            <HitDetails hit={selectedHit} selectedComplexEvent={selectedComplexEvent || undefined} />
+            <HitDetails
+              hit={selectedHit}
+              selectedComplexEvent={selectedComplexEvent || undefined}
+            />
           ) : (
-            <Box sx={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                display: "flex",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Typography variant="body1" color="text.secondary">
                 Select a hit to view details
               </Typography>
@@ -219,12 +287,12 @@ const HitList: React.FC<HitListProps> = ({ data, queryIdToQueryInfoMap, eventInt
               variant="circular"
               color="default"
               sx={{
-                opacity: '0.5 !important',
-                position: 'absolute',
+                opacity: "0.5 !important",
+                position: "absolute",
                 bottom: 16,
                 right: 16,
-                '&:hover': {
-                  opacity: '1 !important',
+                "&:hover": {
+                  opacity: "1 !important",
                 },
               }}
             >

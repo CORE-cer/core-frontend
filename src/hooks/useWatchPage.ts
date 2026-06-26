@@ -1,24 +1,37 @@
-import type { QueryId, ViewMode } from '@/types';
-import { useEffect, useState } from 'react';
+import type { QueryId, ViewMode } from "@/types";
+import { useEffect, useState } from "react";
 
-import { useQueryManager } from './useQueryManager';
-import { useTimelineManager } from './useTimelineManager';
-import { useWebSocketManager } from './useWebSocketManager';
+import { useEventBuffer } from "./useEventBuffer";
+import { useQueryManager } from "./useQueryManager";
+import { useQueryStats } from "./useQueryStats";
+import { useTimelineManager } from "./useTimelineManager";
+import { useWebSocketConnections } from "./useWebSocketConnections";
+import { useWebSocketMessages } from "./useWebSocketMessages";
 
 export function useWatchPage() {
-  const [selectedQueryIds, setSelectedQueryIds] = useState<Set<QueryId>>(new Set());
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [selectedQueryIds, setSelectedQueryIds] = useState<Set<QueryId>>(
+    new Set(),
+  );
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [eventInterval, setEventInterval] = useState<number>(0);
 
-  // Use the query manager hook for queries and streams
   const { queries, streamsInfo, handleInactivateQuery } = useQueryManager();
 
-  // Use the WebSocket manager hook for data and stats
-  const { data, queryIdToQueryStat, eventInterval, setEventInterval, clearData } = useWebSocketManager(selectedQueryIds, queries, streamsInfo);
+  const connections = useWebSocketConnections(selectedQueryIds);
+  const {
+    data: rawData,
+    hitCountsRef,
+    clearData: clearRawData,
+  } = useWebSocketMessages(connections, queries, streamsInfo);
+  const data = useEventBuffer(rawData, eventInterval, selectedQueryIds);
+  const { queryIdToQueryStat, clearStats } = useQueryStats(
+    connections,
+    hitCountsRef,
+  );
 
-  // Use the timeline manager hook for timeline-specific functionality
-  const { timelineConfig, updateTimeHorizon, getAllActiveQueryEvents } = useTimelineManager(data, selectedQueryIds);
+  const { timelineConfig, updateTimeHorizon, getAllActiveQueryEvents } =
+    useTimelineManager(data, selectedQueryIds);
 
-  // Remove queries that are no longer active
   useEffect(() => {
     setSelectedQueryIds((prev) => {
       let changed = false;
@@ -40,8 +53,18 @@ export function useWatchPage() {
     });
   }, [queries]);
 
-  const handleViewModeChange = (_: React.MouseEvent<HTMLElement>, newValue: ViewMode) => {
-    setViewMode(newValue);
+  const handleViewModeChange = (
+    _: React.MouseEvent<HTMLElement>,
+    newValue: ViewMode | null,
+  ) => {
+    if (newValue !== null) {
+      setViewMode(newValue);
+    }
+  };
+
+  const clearData = () => {
+    clearRawData();
+    clearStats();
   };
 
   return {
@@ -56,7 +79,6 @@ export function useWatchPage() {
     setEventInterval,
     handleViewModeChange,
     handleInactivateQuery,
-    // Timeline-specific exports
     timelineConfig,
     updateTimeHorizon,
     getAllActiveQueryEvents,

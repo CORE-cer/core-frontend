@@ -1,13 +1,13 @@
-import type { ExampleData } from '@/types';
-import { addQuery } from '@/utils/api';
-import type { editor } from 'monaco-editor';
-import { enqueueSnackbar } from 'notistack';
-import { useCallback, useRef, useState } from 'react';
+import type { ExampleData } from "@/types";
+import { addQuery } from "@/utils/api";
+import type { editor } from "monaco-editor";
+import { enqueueSnackbar } from "notistack";
+import { useCallback, useRef, useState } from "react";
 
 export const useQueryPage = () => {
   const queryEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [queryName, setQueryName] = useState('');
+  const [queryName, setQueryName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSetExample = useCallback((example: ExampleData) => {
@@ -21,7 +21,7 @@ export const useQueryPage = () => {
   const handleModalClose = useCallback(() => {
     if (loading) return; // Prevent closing modal while query is being added
     setModalOpen(false);
-    setQueryName('');
+    setQueryName("");
   }, [loading]);
 
   const handleAddQuery = () => {
@@ -34,21 +34,21 @@ export const useQueryPage = () => {
       try {
         e.preventDefault();
         const editor = queryEditorRef.current;
-        const currentQuery = editor?.getValue() ?? '';
+        const currentQuery = editor?.getValue() ?? "";
 
         await addQuery({ query: currentQuery, queryName });
-        enqueueSnackbar('Query added successfully', { variant: 'success' });
+        enqueueSnackbar("Query added successfully", { variant: "success" });
       } catch (err) {
         console.error(err);
         enqueueSnackbar(`Error adding query: ${(err as Error).toString()}`, {
-          variant: 'error',
+          variant: "error",
         });
       } finally {
         setLoading(false);
         handleModalClose();
       }
     },
-    [handleModalClose, queryName]
+    [handleModalClose, queryName],
   );
 
   return {

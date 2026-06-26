@@ -1,26 +1,26 @@
-import examples from '@/data/examples';
-import { SCHEMAS } from '@/data/schema';
-import type { ExampleData, StreamType } from '@/types';
-import { Box, Button, ButtonGroup } from '@mui/material';
-import { useState } from 'react';
+import examples from "@/data/examples";
+import { SCHEMAS } from "@/data/schema";
+import type { ExampleData, StreamType } from "@/types";
+import { Box, Button, ButtonGroup } from "@mui/material";
+import { useState } from "react";
 
-import Examples from './Examples';
-import Schema from './Schema';
+import Examples from "./Examples";
+import Schema from "./Schema";
 
-type SidebarMode = 'examples' | 'schema';
+type SidebarMode = "examples" | "schema";
 
 type QuerySidebarProps = {
   setExample: (example: ExampleData) => void;
 };
 
 function capitalizeFirstLetter(str: string): string {
-  if (!str) return '';
+  if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function QuerySidebar({ setExample }: QuerySidebarProps) {
-  const [mode, setMode] = useState<SidebarMode>('examples');
-  const [selectedStream, setSelectedStream] = useState<StreamType>('bluesky');
+  const [mode, setMode] = useState<SidebarMode>("examples");
+  const [selectedStream, setSelectedStream] = useState<StreamType>("bluesky");
 
   const currentExamples = examples[selectedStream];
   const currentSchema = SCHEMAS[selectedStream];
@@ -29,21 +29,23 @@ export function QuerySidebar({ setExample }: QuerySidebarProps) {
     <Box
       sx={{
         borderLeft: 1,
-        borderColor: 'divider',
+        borderColor: "divider",
         flex: 1,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       {/* Stream Type Toggle */}
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
         <ButtonGroup fullWidth variant="outlined" size="small">
           {Object.keys(SCHEMAS).map((streamType) => {
             const typedStreamType = streamType as StreamType;
             return (
               <Button
-                variant={selectedStream === typedStreamType ? 'contained' : 'outlined'}
+                variant={
+                  selectedStream === typedStreamType ? "contained" : "outlined"
+                }
                 onClick={() => {
                   setSelectedStream(typedStreamType);
                 }}
@@ -57,20 +59,20 @@ export function QuerySidebar({ setExample }: QuerySidebarProps) {
       </Box>
 
       {/* Mode Toggle (Examples/Schema) */}
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
         <ButtonGroup fullWidth variant="contained" size="small">
           <Button
-            variant={mode === 'schema' ? 'contained' : 'outlined'}
+            variant={mode === "schema" ? "contained" : "outlined"}
             onClick={() => {
-              setMode('schema');
+              setMode("schema");
             }}
           >
             Schema
           </Button>
           <Button
-            variant={mode === 'examples' ? 'contained' : 'outlined'}
+            variant={mode === "examples" ? "contained" : "outlined"}
             onClick={() => {
-              setMode('examples');
+              setMode("examples");
             }}
           >
             Examples
@@ -79,14 +81,21 @@ export function QuerySidebar({ setExample }: QuerySidebarProps) {
       </Box>
 
       {/* Content */}
-      <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {mode === 'examples' ? (
+      <Box
+        sx={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {mode === "examples" ? (
           <Examples examples={currentExamples} setExample={setExample} />
         ) : (
-          <Schema 
-            schema={currentSchema} 
+          <Schema
+            schema={currentSchema}
             streamType={selectedStream}
-            sx={{ flex: 1, overflow: 'auto', p: 2 }} 
+            sx={{ flex: 1, overflow: "auto", p: 2 }}
           />
         )}
       </Box>

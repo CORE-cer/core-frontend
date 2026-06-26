@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { GetAttributeInfoSchema } from './attributeInfoSchema';
+import { GetAttributeInfoSchema } from "./attributeInfoSchema";
 
 export const GetEventInfoSchema = z.object({
   id: z.number(),

@@ -1,50 +1,71 @@
-import { COLORS, MAX_COLORS } from '@/colors';
-import type { FormattedHit, FormattedMarkedComplexEvent, QueryId } from '@/types';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Card, CardContent, Chip, Collapse, IconButton, Paper, Stack, Typography, styled } from '@mui/material';
-import { memo } from 'react';
+import { getQueryColor } from "@/colors";
+import type {
+  FormattedHit,
+  FormattedMarkedComplexEvent,
+  QueryId,
+} from "@/types";
+import { formatTime } from "@/utils/formatTime";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  Collapse,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+  styled,
+} from "@mui/material";
+import type { IconButtonProps } from "@mui/material";
+import { memo } from "react";
 
 type HitItemProps = {
   qid: QueryId;
   queryName: string;
   data: FormattedHit;
   onHitClick: (hit: FormattedHit) => void;
-  onComplexEventClick: (hit: FormattedHit, complexEvent: FormattedMarkedComplexEvent) => void;
+  onComplexEventClick: (
+    hit: FormattedHit,
+    complexEvent: FormattedMarkedComplexEvent,
+  ) => void;
   selected?: boolean;
   selectedComplexEventIndex?: number;
   expanded: boolean;
   onExpandedChange: (expanded: boolean) => void;
 };
 
-const ExpandMore = styled((props: any) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
+type ExpandMoreProps = IconButtonProps & { expand: boolean };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ExpandMore = styled(({ expand, ...other }: ExpandMoreProps) => (
+  <IconButton {...other} />
+))(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
 }));
 
 const HitItem = memo(
-  function HitItem({ qid, queryName, data, onHitClick, onComplexEventClick, selected, selectedComplexEventIndex, expanded, onExpandedChange }: HitItemProps) {
-    const colorIndex = Number(qid) % MAX_COLORS;
-    const color = COLORS[colorIndex];
+  function HitItem({
+    qid,
+    queryName,
+    data,
+    onHitClick,
+    onComplexEventClick,
+    selected,
+    selectedComplexEventIndex,
+    expanded,
+    onExpandedChange,
+  }: HitItemProps) {
+    const color = getQueryColor(Number(qid));
 
     const handleExpandClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       onExpandedChange(!expanded);
-    };
-
-    const formatTime = (date: Date) => {
-      return date.toLocaleTimeString('en-US', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        fractionalSecondDigits: 3,
-      });
     };
 
     const firstEvent = data.complexEvents[0];
@@ -56,22 +77,30 @@ const HitItem = memo(
       <Card
         sx={{
           my: 0,
-          cursor: 'pointer',
+          cursor: "pointer",
           border: selected ? 2 : 0,
-          borderColor: 'primary.main',
-          position: 'relative',
+          borderColor: "primary.main",
+          position: "relative",
         }}
-        onClick={() => { onHitClick(data); }}
+        onClick={() => {
+          onHitClick(data);
+        }}
       >
         <Box
           sx={{
             height: 4,
-            width: '100%',
+            width: "100%",
             backgroundColor: color,
           }}
         />
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <Box>
               <Typography variant="body2" color="text.secondary">
                 Hit Time: {formatTime(data.end)} - Query: {queryName}
@@ -80,7 +109,12 @@ const HitItem = memo(
                 {data.complexEvents.length} complex events
               </Typography>
             </Box>
-            <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
               <ExpandMoreIcon />
             </ExpandMore>
           </Box>
@@ -97,23 +131,43 @@ const HitItem = memo(
                 sx={{
                   p: 1,
                   my: 0.5,
-                  backgroundColor: selectedComplexEventIndex === 0 ? 'action.selected' : 'background.paper',
-                  '&:hover': {
-                    backgroundColor: 'action.hover',
+                  backgroundColor:
+                    selectedComplexEventIndex === 0
+                      ? "action.selected"
+                      : "background.paper",
+                  "&:hover": {
+                    backgroundColor: "action.hover",
                   },
                 }}
               >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 1,
+                  }}
+                >
                   <Typography variant="body2" color="text.secondary">
-                    {formatTime(firstEvent.start)} - {formatTime(firstEvent.end)}
+                    {formatTime(firstEvent.start)} -{" "}
+                    {formatTime(firstEvent.end)}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {Object.values(firstEvent.complexEvents).reduce((sum, events) => sum + events.length, 0)} events
+                    {Object.values(firstEvent.complexEvents).reduce(
+                      (sum, events) => sum + events.length,
+                      0,
+                    )}{" "}
+                    events
                   </Typography>
                 </Box>
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                   {Object.keys(firstEvent.complexEvents).map((variable) => (
-                    <Chip key={variable} label={variable} size="small" variant="outlined" />
+                    <Chip
+                      key={variable}
+                      label={variable}
+                      size="small"
+                      variant="outlined"
+                    />
                   ))}
                 </Stack>
               </Paper>
@@ -131,23 +185,42 @@ const HitItem = memo(
                   sx={{
                     p: 1,
                     my: 0.5,
-                    backgroundColor: selectedComplexEventIndex === index + 1 ? 'action.selected' : 'background.paper',
-                    '&:hover': {
-                      backgroundColor: 'action.hover',
+                    backgroundColor:
+                      selectedComplexEventIndex === index + 1
+                        ? "action.selected"
+                        : "background.paper",
+                    "&:hover": {
+                      backgroundColor: "action.hover",
                     },
                   }}
                 >
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1,
+                    }}
+                  >
                     <Typography variant="body2" color="text.secondary">
                       {formatTime(event.start)} - {formatTime(event.end)}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {Object.values(event.complexEvents).reduce((sum, events) => sum + events.length, 0)} events
+                      {Object.values(event.complexEvents).reduce(
+                        (sum, events) => sum + events.length,
+                        0,
+                      )}{" "}
+                      events
                     </Typography>
                   </Box>
                   <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                     {Object.keys(event.complexEvents).map((variable) => (
-                      <Chip key={variable} label={variable} size="small" variant="outlined" />
+                      <Chip
+                        key={variable}
+                        label={variable}
+                        size="small"
+                        variant="outlined"
+                      />
                     ))}
                   </Stack>
                 </Paper>
@@ -159,8 +232,16 @@ const HitItem = memo(
     );
   },
   (prevProps, nextProps) => {
-    return JSON.stringify(prevProps) === JSON.stringify(nextProps);
-  }
+    return (
+      prevProps.qid === nextProps.qid &&
+      prevProps.queryName === nextProps.queryName &&
+      prevProps.data === nextProps.data &&
+      prevProps.selected === nextProps.selected &&
+      prevProps.selectedComplexEventIndex ===
+        nextProps.selectedComplexEventIndex &&
+      prevProps.expanded === nextProps.expanded
+    );
+  },
 );
 
 export default HitItem;

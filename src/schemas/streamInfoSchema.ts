@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-import { GetEventInfoSchema } from './eventInfoSchema';
+import { GetEventInfoSchema } from "./eventInfoSchema";
 
 export const GetStreamInfoSchema = z.object({
   id: z.number(),

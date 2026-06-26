@@ -10,10 +10,10 @@ import {
   Link,
   TextField,
   Typography,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import PersonIcon from '@mui/icons-material/Person';
-import { useState } from 'react';
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import PersonIcon from "@mui/icons-material/Person";
+import { useState } from "react";
 
 type BlueskyProfile = {
   did: string;
@@ -32,18 +32,18 @@ type BlueskyProfile = {
     starterPacks: number;
     labeler: boolean;
   };
-  labels?: any[];
+  labels?: unknown[];
 };
 
 export default function DIDLookup() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<BlueskyProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleLookup = async () => {
     if (!input.trim()) {
-      setError('Please enter a DID or handle');
+      setError("Please enter a DID or handle");
       return;
     }
 
@@ -54,35 +54,37 @@ export default function DIDLookup() {
     try {
       const cleanInput = input.trim();
       const url = `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(cleanInput)}`;
-      
+
       const response = await fetch(url);
-      
+
       if (!response.ok) {
-        throw new Error(`Failed to fetch profile: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch profile: ${response.status} ${response.statusText}`,
+        );
       }
-      
-      const data = await response.json() as BlueskyProfile;
+
+      const data = (await response.json()) as BlueskyProfile;
       setProfile(data);
     } catch (err) {
-      console.error('DID lookup error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to lookup profile');
+      console.error("DID lookup error:", err);
+      setError(err instanceof Error ? err.message : "Failed to lookup profile");
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleLookup();
     }
   };
 
   const formatDate = (dateString: string) => {
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       });
     } catch {
       return dateString;
@@ -98,13 +100,18 @@ export default function DIDLookup() {
       <Typography variant="h6" gutterBottom sx={{ fontWeight: 500 }}>
         DID/Handle Lookup
       </Typography>
-      
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
-        Enter a Bluesky DID (did:plc:...) or handle (username.bsky.social) to get profile information.
-        This helps you understand the human-readable context behind DIDs you see in event streams.
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ mb: 3, lineHeight: 1.6 }}
+      >
+        Enter a Bluesky DID (did:plc:...) or handle (username.bsky.social) to
+        get profile information. This helps you understand the human-readable
+        context behind DIDs you see in event streams.
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+      <Box sx={{ display: "flex", gap: 1, mb: 3 }}>
         <TextField
           fullWidth
           size="small"
@@ -123,18 +130,17 @@ export default function DIDLookup() {
           startIcon={loading ? <CircularProgress size={16} /> : <SearchIcon />}
           sx={{ minWidth: 100 }}
         >
-          {loading ? 'Looking up...' : 'Lookup'}
+          {loading ? "Looking up..." : "Lookup"}
         </Button>
       </Box>
 
       {profile && (
         <Card variant="outlined">
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-              <Avatar
-                src={profile.avatar}
-                sx={{ width: 56, height: 56 }}
-              >
+            <Box
+              sx={{ display: "flex", alignItems: "flex-start", gap: 2, mb: 2 }}
+            >
+              <Avatar src={profile.avatar} sx={{ width: 56, height: 56 }}>
                 <PersonIcon />
               </Avatar>
               <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -154,9 +160,20 @@ export default function DIDLookup() {
 
             <Divider sx={{ my: 2 }} />
 
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 2, mb: 2 }}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: 2,
+                mb: 2,
+              }}
+            >
               <Box>
-                <Typography variant="caption" color="text.secondary" display="block">
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                >
                   Posts
                 </Typography>
                 <Typography variant="body2" fontWeight="500">
@@ -164,7 +181,11 @@ export default function DIDLookup() {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary" display="block">
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                >
                   Followers
                 </Typography>
                 <Typography variant="body2" fontWeight="500">
@@ -172,7 +193,11 @@ export default function DIDLookup() {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary" display="block">
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                >
                   Following
                 </Typography>
                 <Typography variant="body2" fontWeight="500">
@@ -180,7 +205,11 @@ export default function DIDLookup() {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary" display="block">
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                >
                   Joined
                 </Typography>
                 <Typography variant="body2" fontWeight="500">
@@ -192,16 +221,21 @@ export default function DIDLookup() {
             <Divider sx={{ my: 2 }} />
 
             <Box>
-              <Typography variant="caption" color="text.secondary" display="block" gutterBottom>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                display="block"
+                gutterBottom
+              >
                 DID
               </Typography>
               <Typography
                 variant="body2"
                 sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  wordBreak: 'break-all',
-                  backgroundColor: 'action.hover',
+                  fontFamily: "monospace",
+                  fontSize: "0.75rem",
+                  wordBreak: "break-all",
+                  backgroundColor: "action.hover",
                   p: 1,
                   borderRadius: 1,
                 }}
@@ -228,10 +262,8 @@ export default function DIDLookup() {
         <Alert severity="info" sx={{ mt: 2 }}>
           <Typography variant="body2">
             <strong>Examples:</strong>
-            <br />
-            • DID: <code>did:plc:ovwabcu6febdpxar2diytg2s</code>
-            <br />
-            • Handle: <code>starchann.bsky.social</code>
+            <br />• DID: <code>did:plc:ovwabcu6febdpxar2diytg2s</code>
+            <br />• Handle: <code>starchann.bsky.social</code>
           </Typography>
         </Alert>
       )}

@@ -1,6 +1,6 @@
-import { DRAWER_WIDTH } from '@/utils/constants';
-import { Box } from '@mui/material';
-import type { ReactNode } from 'react';
+import { DRAWER_WIDTH } from "@/utils/constants";
+import { Box } from "@mui/material";
+import type { ReactNode } from "react";
 
 type MainProps = {
   permanentDrawer?: boolean;
@@ -11,10 +11,10 @@ const Main = ({ permanentDrawer, children }: MainProps) => {
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: "flex",
         ml: permanentDrawer ? `${DRAWER_WIDTH.toString()}px` : 0,
         flexGrow: 1,
-        overflow: 'visible',
+        overflow: "visible",
         // 48px is the dense's toolbar height
         height: `calc(100vh - 48px)`,
       }}

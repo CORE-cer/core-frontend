@@ -1,8 +1,8 @@
-import { useTheme } from '@emotion/react';
-import type { Theme } from '@mui/material/styles';
-import type { ApexOptions } from 'apexcharts';
-import { useEffect, useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
+import { useTheme } from "@emotion/react";
+import type { Theme } from "@mui/material/styles";
+import type { ApexOptions } from "apexcharts";
+import { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
 
 type SeriesData = {
   name: string;
@@ -26,7 +26,7 @@ const LineChart: React.FC<LineChartProps> = ({ series, colors }) => {
     series,
     options: {
       stroke: {
-        curve: 'smooth',
+        curve: "smooth",
       },
       colors,
       chart: {
@@ -39,8 +39,8 @@ const LineChart: React.FC<LineChartProps> = ({ series, colors }) => {
             speed: 300,
           },
         },
-        type: 'line',
-        height: 'auto',
+        type: "line",
+        height: "auto",
         redrawOnParentResize: true,
         redrawOnWindowResize: true,
       },
@@ -48,7 +48,7 @@ const LineChart: React.FC<LineChartProps> = ({ series, colors }) => {
         mode: theme.palette.mode,
       },
       xaxis: {
-        type: 'datetime',
+        type: "datetime",
         range: 10 * 1000, // 10 seconds,
         labels: {
           datetimeUTC: false,
@@ -85,7 +85,15 @@ const LineChart: React.FC<LineChartProps> = ({ series, colors }) => {
     }));
   }, [theme, series, colors]);
 
-  return <ReactApexChart height="100%" width="100%" options={config.options} series={config.series} type="line" />;
+  return (
+    <ReactApexChart
+      height="100%"
+      width="100%"
+      options={config.options}
+      series={config.series}
+      type="line"
+    />
+  );
 };
 
 export default LineChart;

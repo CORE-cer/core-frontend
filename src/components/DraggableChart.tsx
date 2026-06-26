@@ -1,9 +1,9 @@
-import { Paper, Typography } from '@mui/material';
-import { motion } from 'framer-motion';
-import { Resizable } from 're-resizable';
-import React, { type RefObject, useState } from 'react';
+import { Paper, Typography } from "@mui/material";
+import { motion } from "framer-motion";
+import { Resizable } from "re-resizable";
+import React, { type RefObject, useState } from "react";
 
-import './resizable-chart.css';
+import "./resizable-chart.css";
 
 type DraggableChartProps = {
   id: string;
@@ -60,13 +60,13 @@ const DraggableChart: React.FC<DraggableChartProps> = ({
       whileDrag={{
         scale: 1.05,
         zIndex: 1000,
-        boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+        boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
       }}
       style={{
-        position: 'absolute',
+        position: "absolute",
       }}
       transition={{
-        type: 'spring',
+        type: "spring",
         stiffness: 500,
         damping: 30,
       }}
@@ -107,66 +107,70 @@ const DraggableChart: React.FC<DraggableChartProps> = ({
         }}
         handleStyles={{
           right: {
-            right: '-5px',
-            width: '10px',
-            height: '100%',
-            backgroundColor: 'transparent',
-            cursor: 'ew-resize',
+            right: "-5px",
+            width: "10px",
+            height: "100%",
+            backgroundColor: "transparent",
+            cursor: "ew-resize",
           },
           bottom: {
-            bottom: '-5px',
-            width: '100%',
-            height: '10px',
-            backgroundColor: 'transparent',
-            cursor: 'ns-resize',
+            bottom: "-5px",
+            width: "100%",
+            height: "10px",
+            backgroundColor: "transparent",
+            cursor: "ns-resize",
           },
           bottomRight: {
-            right: '-5px',
-            bottom: '-5px',
-            width: '20px',
-            height: '20px',
-            backgroundColor: '#1976d2',
-            cursor: 'nw-resize',
-            borderRadius: '50%',
+            right: "-5px",
+            bottom: "-5px",
+            width: "20px",
+            height: "20px",
+            backgroundColor: "#1976d2",
+            cursor: "nw-resize",
+            borderRadius: "50%",
             opacity: 0.7,
           },
         }}
         handleClasses={{
-          right: 'resize-handle-right',
-          bottom: 'resize-handle-bottom',
-          bottomRight: 'resize-handle-corner',
+          right: "resize-handle-right",
+          bottom: "resize-handle-bottom",
+          bottomRight: "resize-handle-corner",
         }}
-        className={`resizable-chart ${isResizing ? 'resizing' : ''}`}
+        className={`resizable-chart ${isResizing ? "resizing" : ""}`}
       >
         <Paper
           sx={{
             p: 2,
-            cursor: isResizing ? 'default' : 'grab',
-            '&:active': {
-              cursor: isResizing ? 'default' : 'grabbing',
+            cursor: isResizing ? "default" : "grab",
+            "&:active": {
+              cursor: isResizing ? "default" : "grabbing",
             },
-            userSelect: 'none',
-            width: '100%',
-            height: '100%',
+            userSelect: "none",
+            width: "100%",
+            height: "100%",
             boxShadow: isDragging ? 6 : isResizing ? 4 : 2,
-            border: isResizing ? '2px solid #1976d2' : 'none',
-            transition: 'border 0.2s ease, box-shadow 0.2s ease',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            '& .resize-handle-right:hover, & .resize-handle-bottom:hover': {
-              backgroundColor: 'rgba(25, 118, 210, 0.1)',
+            border: isResizing ? "2px solid #1976d2" : "none",
+            transition: "border 0.2s ease, box-shadow 0.2s ease",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            "& .resize-handle-right:hover, & .resize-handle-bottom:hover": {
+              backgroundColor: "rgba(25, 118, 210, 0.1)",
             },
-            '& .resize-handle-corner:hover': {
+            "& .resize-handle-corner:hover": {
               opacity: 1,
-              transform: 'scale(1.2)',
+              transform: "scale(1.2)",
             },
           }}
         >
-          <Typography variant="h6" textAlign="center" sx={{ mb: 2, flexShrink: 0 }}>
+          <Typography
+            variant="h6"
+            textAlign="center"
+            sx={{ mb: 2, flexShrink: 0 }}
+          >
             {title}
           </Typography>
-          <div style={{ flex: 1, minHeight: 0, width: '100%' }}>{children}</div>
+          <div style={{ flex: 1, minHeight: 0, width: "100%" }}>{children}</div>
         </Paper>
       </Resizable>
     </motion.div>
