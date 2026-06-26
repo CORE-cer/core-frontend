@@ -324,9 +324,10 @@ function StreamTable({
               {expandedStream === stream.name && (
                 <StreamDetailRow
                   stream={stream}
-                  streamInfo={streamsInfo.find(
-                    (si) =>
-                      si.name.toLowerCase() === stream.name.toLowerCase(),
+                  streamInfo={streamsInfo.find((si) =>
+                    si.events_info.some((e) =>
+                      stream.event_types.includes(e.name),
+                    ),
                   )}
                 />
               )}
