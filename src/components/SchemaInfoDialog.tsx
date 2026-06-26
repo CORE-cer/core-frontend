@@ -11,13 +11,13 @@ import {
   Tab,
   Tabs,
   Typography,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState } from 'react';
-import type { StreamType } from '@/types';
-import { getSchemaInfo, type FAQItem } from '@/data/faq';
-import DIDLookup from '@/components/DIDLookup';
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
+import type { StreamType } from "@/types";
+import { getSchemaInfo, type FAQItem } from "@/data/faq";
+import DIDLookup from "@/components/DIDLookup";
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -41,7 +41,7 @@ function TabPanel({ children, value, index }: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `schema-info-tab-${index}`,
-    'aria-controls': `schema-info-tabpanel-${index}`,
+    "aria-controls": `schema-info-tabpanel-${index}`,
   };
 }
 
@@ -53,16 +53,16 @@ function FAQSection({ items }: FAQSectionProps) {
   return (
     <Box>
       {items.map((item) => (
-        <Accordion 
+        <Accordion
           key={item.id}
-          sx={{ 
+          sx={{
             mb: 1,
-            '&:before': {
-              display: 'none',
+            "&:before": {
+              display: "none",
             },
-            '&.Mui-expanded': {
-              margin: '0 0 8px 0',
-            }
+            "&.Mui-expanded": {
+              margin: "0 0 8px 0",
+            },
           }}
         >
           <AccordionSummary
@@ -70,21 +70,25 @@ function FAQSection({ items }: FAQSectionProps) {
             aria-controls={`panel-${item.id}-content`}
             id={`panel-${item.id}-header`}
             sx={{
-              '& .MuiAccordionSummary-content': {
-                alignItems: 'center',
-                gap: 1
-              }
+              "& .MuiAccordionSummary-content": {
+                alignItems: "center",
+                gap: 1,
+              },
             }}
           >
-            <Typography variant="subtitle1" component="div" sx={{ fontWeight: 500 }}>
+            <Typography
+              variant="subtitle1"
+              component="div"
+              sx={{ fontWeight: 500 }}
+            >
               {item.question}
             </Typography>
             {item.category && (
-              <Chip 
-                label={item.category} 
-                size="small" 
+              <Chip
+                label={item.category}
+                size="small"
                 variant="outlined"
-                sx={{ ml: 'auto' }}
+                sx={{ ml: "auto" }}
               />
             )}
           </AccordionSummary>
@@ -105,7 +109,11 @@ type SchemaInfoDialogProps = {
   streamType: StreamType;
 };
 
-export default function SchemaInfoDialog({ open, onClose, streamType }: SchemaInfoDialogProps) {
+export default function SchemaInfoDialog({
+  open,
+  onClose,
+  streamType,
+}: SchemaInfoDialogProps) {
   const [value, setValue] = useState(0);
   const schemaInfo = getSchemaInfo(streamType);
 
@@ -118,24 +126,26 @@ export default function SchemaInfoDialog({ open, onClose, streamType }: SchemaIn
   }
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
-          height: '80vh',
-          maxHeight: '80vh'
-        }
+          height: "80vh",
+          maxHeight: "80vh",
+        },
       }}
     >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        pb: 1
-      }}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          pb: 1,
+        }}
+      >
         <Box>
           <Typography variant="h5" component="div" sx={{ fontWeight: 500 }}>
             {schemaInfo.overview}
@@ -144,41 +154,43 @@ export default function SchemaInfoDialog({ open, onClose, streamType }: SchemaIn
             {schemaInfo.description}
           </Typography>
         </Box>
-        <IconButton 
-          aria-label="close" 
-          onClick={onClose}
-          sx={{ ml: 2 }}
-        >
+        <IconButton aria-label="close" onClick={onClose} sx={{ ml: 2 }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
-      <DialogContent sx={{ 
-        display: 'flex', 
-        flexDirection: 'column',
-        overflow: 'hidden',
-        p: 0
-      }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
-          <Tabs 
-            value={value} 
-            onChange={handleChange} 
+
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          p: 0,
+        }}
+      >
+        <Box sx={{ borderBottom: 1, borderColor: "divider", px: 3 }}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
             aria-label="Schema info sections"
             variant="scrollable"
             scrollButtons="auto"
           >
             <Tab label="Overview" {...a11yProps(0)} />
             <Tab label="FAQ" {...a11yProps(1)} />
-            {streamType === 'bluesky' && <Tab label="DID Lookup" {...a11yProps(2)} />}
+            {streamType === "bluesky" && (
+              <Tab label="DID Lookup" {...a11yProps(2)} />
+            )}
           </Tabs>
         </Box>
 
-        <Box sx={{ 
-          flex: 1, 
-          overflow: 'auto',
-          px: 3,
-          pb: 2
-        }}>
+        <Box
+          sx={{
+            flex: 1,
+            overflow: "auto",
+            px: 3,
+            pb: 2,
+          }}
+        >
           <TabPanel value={value} index={0}>
             <Box>
               <Typography variant="h6" gutterBottom sx={{ fontWeight: 500 }}>
@@ -187,23 +199,28 @@ export default function SchemaInfoDialog({ open, onClose, streamType }: SchemaIn
               <Typography variant="body1" sx={{ lineHeight: 1.7, mb: 3 }}>
                 {schemaInfo.description}
               </Typography>
-              
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 500, mt: 3 }}>
+
+              <Typography
+                variant="h6"
+                gutterBottom
+                sx={{ fontWeight: 500, mt: 3 }}
+              >
                 Getting Started
               </Typography>
               <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
-                Explore the examples in the Query tab to see how to work with {streamType} data. 
-                Each example demonstrates different patterns and use cases for this stream type. 
-                You can modify these examples or create your own queries to analyze the data.
+                Explore the examples in the Query tab to see how to work with{" "}
+                {streamType} data. Each example demonstrates different patterns
+                and use cases for this stream type. You can modify these
+                examples or create your own queries to analyze the data.
               </Typography>
             </Box>
           </TabPanel>
-          
+
           <TabPanel value={value} index={1}>
             <FAQSection items={schemaInfo.faqs} />
           </TabPanel>
-          
-          {streamType === 'bluesky' && (
+
+          {streamType === "bluesky" && (
             <TabPanel value={value} index={2}>
               <DIDLookup />
             </TabPanel>

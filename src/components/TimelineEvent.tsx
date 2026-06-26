@@ -1,7 +1,7 @@
-import { getQueryColor } from '@/colors';
-import type { TimelineEvent } from '@/types';
-import { Box } from '@mui/material';
-import { memo } from 'react';
+import { getQueryColor } from "@/colors";
+import type { TimelineEvent } from "@/types";
+import { Box } from "@mui/material";
+import { memo } from "react";
 
 type TimelineEventProps = {
   event: TimelineEvent;
@@ -17,23 +17,23 @@ function TimelineEventComponent({ event, queryIndex }: TimelineEventProps) {
       data-received-at={event.receivedAt.getTime().toString()}
       title={`Query ${event.queryId.toString()} - Event at ${event.data.end.toLocaleTimeString()}`}
       sx={{
-        position: 'absolute',
+        position: "absolute",
         width: 12,
         height: 12,
         backgroundColor: color,
-        borderRadius: '50%',
-        border: '2px solid',
-        borderColor: 'background.paper',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        top: '50%',
-        transform: 'translateY(-50%)',
+        borderRadius: "50%",
+        border: "2px solid",
+        borderColor: "background.paper",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+        top: "50%",
+        transform: "translateY(-50%)",
         zIndex: 1,
-        cursor: 'pointer',
-        willChange: 'right',
-        '&:hover': {
-          transform: 'translateY(-50%) scale(1.3)',
+        cursor: "pointer",
+        willChange: "right",
+        "&:hover": {
+          transform: "translateY(-50%) scale(1.3)",
           zIndex: 2,
-          boxShadow: '0 3px 6px rgba(0,0,0,0.25)',
+          boxShadow: "0 3px 6px rgba(0,0,0,0.25)",
         },
       }}
     />

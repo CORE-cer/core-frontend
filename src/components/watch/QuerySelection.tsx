@@ -1,16 +1,27 @@
-import { getQueryColor } from '@/colors';
-import { useWatchPageContext } from '@/context/WatchPageContext';
-import type { QueryId, QueryInfo } from '@/types';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CodeIcon from '@mui/icons-material/Code';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { enqueueSnackbar } from 'notistack';
-import { Box, Checkbox, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
-import { useState } from 'react';
+import { getQueryColor } from "@/colors";
+import { useWatchPageContext } from "@/context/WatchPageContext";
+import type { QueryId, QueryInfo } from "@/types";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CodeIcon from "@mui/icons-material/Code";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { enqueueSnackbar } from "notistack";
+import {
+  Box,
+  Checkbox,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+} from "@mui/material";
+import { useState } from "react";
 
-import QueryTextPreview from './QueryTextPreview';
+import QueryTextPreview from "./QueryTextPreview";
 
 type QuerySelectionItemProps = {
   query: QueryInfo;
@@ -24,7 +35,12 @@ type QuerySelectionProps = {
   onToggleExpanded?: () => void;
 };
 
-export function QuerySelectionItem({ query, checked, handleChange, handleInactivateQuery }: QuerySelectionItemProps) {
+export function QuerySelectionItem({
+  query,
+  checked,
+  handleChange,
+  handleInactivateQuery,
+}: QuerySelectionItemProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -43,14 +59,14 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
       <ListItem
         disablePadding
         sx={{
-          alignItems: 'center',
+          alignItems: "center",
         }}
       >
-        <ListItemButton 
+        <ListItemButton
           onClick={handleChange}
           sx={{
             height: 36,
-            py: 0
+            py: 0,
           }}
         >
           <Checkbox
@@ -62,31 +78,33 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
               p: 0.5,
               ml: -0.5,
               color: getQueryColor(Number(query.queryId)),
-              '&.Mui-checked': {
+              "&.Mui-checked": {
                 color: getQueryColor(Number(query.queryId)),
               },
             }}
           />
           <Tooltip title={query.query_name} arrow placement="top">
-            <ListItemText 
-              primary={query.query_name} 
-              sx={{ 
-                flex: '1 1 auto',
+            <ListItemText
+              primary={query.query_name}
+              sx={{
+                flex: "1 1 auto",
                 mr: 1,
-                '& .MuiTypography-root': {
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap'
-                }
-              }} 
+                "& .MuiTypography-root": {
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                },
+              }}
             />
           </Tooltip>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            gap: 0.5,
-            ml: 'auto'
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              ml: "auto",
+            }}
+          >
             <Tooltip title="View query" arrow placement="top">
               <IconButton
                 size="small"
@@ -104,9 +122,13 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
                   e.stopPropagation();
                   try {
                     await navigator.clipboard.writeText(query.query_string);
-                    enqueueSnackbar('Query copied to clipboard', { variant: 'success' });
+                    enqueueSnackbar("Query copied to clipboard", {
+                      variant: "success",
+                    });
                   } catch {
-                    enqueueSnackbar('Failed to copy query', { variant: 'error' });
+                    enqueueSnackbar("Failed to copy query", {
+                      variant: "error",
+                    });
                   }
                 }}
                 sx={{ p: 0.5 }}
@@ -130,13 +152,27 @@ export function QuerySelectionItem({ query, checked, handleChange, handleInactiv
           </Box>
         </ListItemButton>
       </ListItem>
-      <QueryTextPreview queryText={query.query_string} queryName={query.query_name} anchorEl={anchorEl} open={previewOpen} placement="right" />
+      <QueryTextPreview
+        queryText={query.query_string}
+        queryName={query.query_name}
+        anchorEl={anchorEl}
+        open={previewOpen}
+        placement="right"
+      />
     </>
   );
 }
 
-export function QuerySelection({ isExpanded = false, onToggleExpanded }: QuerySelectionProps) {
-  const { queries, selectedQueryIds, setSelectedQueryIds, handleInactivateQuery: onInactivateQuery } = useWatchPageContext();
+export function QuerySelection({
+  isExpanded = false,
+  onToggleExpanded,
+}: QuerySelectionProps) {
+  const {
+    queries,
+    selectedQueryIds,
+    setSelectedQueryIds,
+    handleInactivateQuery: onInactivateQuery,
+  } = useWatchPageContext();
   const handleSelectSingleQuery = (queryId: QueryId) => {
     setSelectedQueryIds((prev) => {
       const next = new Set(prev);
@@ -160,11 +196,11 @@ export function QuerySelection({ isExpanded = false, onToggleExpanded }: QuerySe
   return (
     <Box
       sx={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
       }}
     >
       {onToggleExpanded && (
@@ -172,42 +208,53 @@ export function QuerySelection({ isExpanded = false, onToggleExpanded }: QuerySe
           onClick={onToggleExpanded}
           size="small"
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: -12,
             top: 8,
             zIndex: 1,
-            backgroundColor: 'background.paper',
+            backgroundColor: "background.paper",
             border: 1,
-            borderColor: 'divider',
-            '&:hover': {
-              backgroundColor: 'action.hover',
+            borderColor: "divider",
+            "&:hover": {
+              backgroundColor: "action.hover",
             },
           }}
         >
           {isExpanded ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       )}
-      <List 
-        dense 
+      <List
+        dense
         sx={{
-          width: '100%',
-          overflowY: 'auto',
+          width: "100%",
+          overflowY: "auto",
           flex: 1,
         }}
       >
         <ListItem disablePadding>
-          <ListItemButton onClick={handleSelectAll} disabled={queries.size === 0}>
+          <ListItemButton
+            onClick={handleSelectAll}
+            disabled={queries.size === 0}
+          >
             <ListItemIcon>
               <Checkbox
                 disabled={queries.size === 0}
                 color="default"
-                checked={queries.size > 0 && selectedQueryIds.size === queries.size}
-                indeterminate={selectedQueryIds.size > 0 && selectedQueryIds.size !== queries.size}
+                checked={
+                  queries.size > 0 && selectedQueryIds.size === queries.size
+                }
+                indeterminate={
+                  selectedQueryIds.size > 0 &&
+                  selectedQueryIds.size !== queries.size
+                }
                 disableFocusRipple
                 disableTouchRipple
               />
             </ListItemIcon>
-            <ListItemText primary="All queries" sx={{ wordBreak: 'break-all' }} />
+            <ListItemText
+              primary="All queries"
+              sx={{ wordBreak: "break-all" }}
+            />
           </ListItemButton>
         </ListItem>
         <Divider />

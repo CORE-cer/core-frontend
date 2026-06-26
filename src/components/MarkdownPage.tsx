@@ -12,17 +12,23 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import Markdown, { type Components } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+} from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import Markdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 // src: https://stackoverflow.com/questions/62923448/using-react-markdown-with-material-ui-table
 const components: Components = {
   // Links
   a: ({ href, children }) => (
-    <Link component="a" href={href} underline="hover" color="primary" rel="noreferrer">
+    <Link
+      component="a"
+      href={href}
+      underline="hover"
+      color="primary"
+      rel="noreferrer"
+    >
       {children}
     </Link>
   ),
@@ -33,52 +39,82 @@ const components: Components = {
     </Typography>
   ),
   del: ({ children }) => (
-    <Typography component="del" sx={{ mt: 1, textDecoration: 'line-through' }}>
+    <Typography component="del" sx={{ mt: 1, textDecoration: "line-through" }}>
       {children}
     </Typography>
   ),
   em: ({ children }) => (
-    <Typography component="em" sx={{ mt: 1, fontStyle: 'italic' }}>
+    <Typography component="em" sx={{ mt: 1, fontStyle: "italic" }}>
       {children}
     </Typography>
   ),
   strong: ({ children }) => (
-    <Typography component="strong" sx={{ mt: 1, fontWeight: 'bold' }}>
+    <Typography component="strong" sx={{ mt: 1, fontWeight: "bold" }}>
       {children}
     </Typography>
   ),
   b: ({ children }) => (
-    <Typography component="b" sx={{ mt: 1, fontWeight: 'bold' }}>
+    <Typography component="b" sx={{ mt: 1, fontWeight: "bold" }}>
       {children}
     </Typography>
   ),
   h1: ({ children }) => (
-    <Typography component="h1" variant="h1" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '2.5rem !important' }}>
+    <Typography
+      component="h1"
+      variant="h1"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: "2.5rem !important" }}
+    >
       {children}
     </Typography>
   ),
   h2: ({ children }) => (
-    <Typography component="h2" variant="h2" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '2rem !important' }}>
+    <Typography
+      component="h2"
+      variant="h2"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: "2rem !important" }}
+    >
       {children}
     </Typography>
   ),
   h3: ({ children }) => (
-    <Typography component="h3" variant="h3" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '1.5rem !important' }}>
+    <Typography
+      component="h3"
+      variant="h3"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: "1.5rem !important" }}
+    >
       {children}
     </Typography>
   ),
   h4: ({ children }) => (
-    <Typography component="h4" variant="h4" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '1.17rem !important' }}>
+    <Typography
+      component="h4"
+      variant="h4"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: "1.17rem !important" }}
+    >
       {children}
     </Typography>
   ),
   h5: ({ children }) => (
-    <Typography component="h5" variant="h4" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '1rem !important' }}>
+    <Typography
+      component="h5"
+      variant="h4"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: "1rem !important" }}
+    >
       {children}
     </Typography>
   ),
   h6: ({ children }) => (
-    <Typography component="h6" variant="h6" gutterBottom sx={{ mt: 3, fontWeight: 500, fontSize: '.83rem !important' }}>
+    <Typography
+      component="h6"
+      variant="h6"
+      gutterBottom
+      sx={{ mt: 3, fontWeight: 500, fontSize: ".83rem !important" }}
+    >
       {children}
     </Typography>
   ),
@@ -97,17 +133,20 @@ const components: Components = {
   td: ({ children }) => <TableCell component="td">{children}</TableCell>,
   // Lists
   ol: ({ children }) => (
-    <Box component="ol" sx={{ pl: '2rem', mt: 2 }}>
+    <Box component="ol" sx={{ pl: "2rem", mt: 2 }}>
       {children}
     </Box>
   ),
   ul: ({ children }) => (
-    <Box component="ul" sx={{ pl: '2rem', mt: 2 }}>
+    <Box component="ul" sx={{ pl: "2rem", mt: 2 }}>
       {children}
     </Box>
   ),
   li: ({ children }) => (
-    <Box component="li" sx={{ mt: 0.5, '&::marker': { color: 'primary.main' } }}>
+    <Box
+      component="li"
+      sx={{ mt: 0.5, "&::marker": { color: "primary.main" } }}
+    >
       {children}
     </Box>
   ),
@@ -116,12 +155,12 @@ const components: Components = {
     <Typography
       component="code"
       sx={{
-        backgroundColor: 'grey.900',
-        color: 'white',
+        backgroundColor: "grey.900",
+        color: "white",
         py: 0.25,
         px: 0.5,
         borderRadius: 1,
-        fontFamily: 'monospace',
+        fontFamily: "monospace",
       }}
     >
       {children}
@@ -134,10 +173,10 @@ const components: Components = {
       sx={{
         my: 2,
         p: 1,
-        borderLeft: '2px solid',
-        borderColor: 'primary.main',
-        fontStyle: 'italic',
-        '& p': {
+        borderLeft: "2px solid",
+        borderColor: "primary.main",
+        fontStyle: "italic",
+        "& p": {
           m: 0,
         },
       }}
@@ -150,12 +189,12 @@ const components: Components = {
     <Box
       component="pre"
       sx={{
-        display: 'flex',
-        overflowX: 'auto',
+        display: "flex",
+        overflowX: "auto",
         borderRadius: 1,
         my: 2,
-        '& code': {
-          flex: '1 1 auto',
+        "& code": {
+          flex: "1 1 auto",
           p: 2,
         },
       }}
@@ -170,7 +209,7 @@ type MarkdownPageProps = {
 };
 
 const MarkdownPage = ({ url }: MarkdownPageProps) => {
-  const [markdownText, setMarkdownText] = useState('');
+  const [markdownText, setMarkdownText] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -198,28 +237,28 @@ const MarkdownPage = ({ url }: MarkdownPageProps) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh', // ✨ Ensures vertical space is constrained
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh", // ✨ Ensures vertical space is constrained
       }}
     >
       <Box
         sx={{
-          flex: '1 1 auto',
+          flex: "1 1 auto",
           minHeight: 0, // allows scrolling inside
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           py: 3,
         }}
       >
         {error ? (
           <Box
             sx={{
-              flex: '1 1 auto',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flex: "1 1 auto",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <Typography variant="h4" color="error" gutterBottom align="center">
@@ -227,22 +266,24 @@ const MarkdownPage = ({ url }: MarkdownPageProps) => {
             </Typography>
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 1,
-                justifyContent: 'space-between ',
+                justifyContent: "space-between ",
               }}
             >
-              <Button onClick={() => void navigate({ to: '/' })}>Go back to Query Editor</Button>
+              <Button onClick={() => void navigate({ to: "/" })}>
+                Go back to Query Editor
+              </Button>
             </Box>
           </Box>
         ) : loading ? (
           <Box
             sx={{
-              flex: '1 1 auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              flex: "1 1 auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <CircularProgress color="primary" size="4rem" />
@@ -252,8 +293,8 @@ const MarkdownPage = ({ url }: MarkdownPageProps) => {
             component="main"
             maxWidth="md"
             sx={{
-              overflow: 'auto', // allow scroll
-              flex: '1 1 auto', // take available space
+              overflow: "auto", // allow scroll
+              flex: "1 1 auto", // take available space
               minHeight: 0, // allow shrinking inside flex parent
             }}
           >

@@ -1,8 +1,17 @@
-import type { HitCount, QueryId, QueryIdToQueryStatMap, QueryIdToQueryWebSocketMap } from '@/types';
-import { type RefObject, useEffect, useState } from 'react';
+import type {
+  HitCount,
+  QueryId,
+  QueryIdToQueryStatMap,
+  QueryIdToQueryWebSocketMap,
+} from "@/types";
+import { type RefObject, useEffect, useState } from "react";
 
-export function useQueryStats(connections: QueryIdToQueryWebSocketMap, hitCountsRef: RefObject<Map<QueryId, HitCount>>) {
-  const [queryIdToQueryStat, setQueryIdToQueryStat] = useState<QueryIdToQueryStatMap>(new Map());
+export function useQueryStats(
+  connections: QueryIdToQueryWebSocketMap,
+  hitCountsRef: RefObject<Map<QueryId, HitCount>>,
+) {
+  const [queryIdToQueryStat, setQueryIdToQueryStat] =
+    useState<QueryIdToQueryStatMap>(new Map());
 
   useEffect(() => {
     setQueryIdToQueryStat((prev) => {
@@ -47,7 +56,10 @@ export function useQueryStats(connections: QueryIdToQueryWebSocketMap, hitCounts
           curr.hitStats.total += counts.numHits;
           curr.complexEventStats.total += counts.numComplexEvents;
           curr.hitStats.max = Math.max(curr.hitStats.max, counts.numHits);
-          curr.complexEventStats.max = Math.max(curr.complexEventStats.max, counts.numComplexEvents);
+          curr.complexEventStats.max = Math.max(
+            curr.complexEventStats.max,
+            counts.numComplexEvents,
+          );
         }
         return next;
       });

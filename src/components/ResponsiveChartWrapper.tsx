@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 type ResponsiveChartWrapperProps = {
   children: React.ReactNode;
   onSizeChange?: (size: { width: number; height: number }) => void;
 };
 
-const ResponsiveChartWrapper: React.FC<ResponsiveChartWrapperProps> = ({ children, onSizeChange }) => {
+const ResponsiveChartWrapper: React.FC<ResponsiveChartWrapperProps> = ({
+  children,
+  onSizeChange,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [key, setKey] = useState(0);
 
@@ -32,10 +35,10 @@ const ResponsiveChartWrapper: React.FC<ResponsiveChartWrapperProps> = ({ childre
     <div
       ref={containerRef}
       style={{
-        width: '100%',
-        height: '100%',
-        minHeight: '200px',
-        position: 'relative',
+        width: "100%",
+        height: "100%",
+        minHeight: "200px",
+        position: "relative",
       }}
       key={key}
     >

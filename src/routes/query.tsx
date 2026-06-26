@@ -1,38 +1,56 @@
 // import Editor from '@/components/Editor';
-import AddQueryDialog from '@/components/query/AddQueryDialog';
-import QuerySidebar from '@/components/query/QuerySidebar';
-import { useQueryPage } from '@/hooks/useQueryPage';
-import { setupMonaco } from '@/monaco/setup.js';
-import type { ExampleData } from '@/types';
-import Editor from '@monaco-editor/react';
-import AddIcon from '@mui/icons-material/Add';
-import { Box, Fab, useTheme } from '@mui/material';
-import { createFileRoute } from '@tanstack/react-router';
-import { useCallback } from 'react';
+import AddQueryDialog from "@/components/query/AddQueryDialog";
+import QuerySidebar from "@/components/query/QuerySidebar";
+import { useQueryPage } from "@/hooks/useQueryPage";
+import { setupMonaco } from "@/monaco/setup.js";
+import type { ExampleData } from "@/types";
+import Editor from "@monaco-editor/react";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Fab, useTheme } from "@mui/material";
+import { createFileRoute } from "@tanstack/react-router";
+import { useCallback } from "react";
 
 const QueryPage: React.FC = () => {
-  const { queryEditorRef, modalOpen, queryName, loading, setQueryName, handleSetExample, handleModalClose, handleAddQuery, submitQuery } = useQueryPage();
+  const {
+    queryEditorRef,
+    modalOpen,
+    queryName,
+    loading,
+    setQueryName,
+    handleSetExample,
+    handleModalClose,
+    handleAddQuery,
+    submitQuery,
+  } = useQueryPage();
   const theme = useTheme();
-  const monacoTheme = theme.palette.mode === 'dark' ? 'ceql-dark' : 'ceql-light';
+  const monacoTheme =
+    theme.palette.mode === "dark" ? "ceql-dark" : "ceql-light";
 
   const setExampleAndQueryname = useCallback(
     (example: ExampleData) => {
       setQueryName(example.short_title);
       handleSetExample(example);
     },
-    [setQueryName, handleSetExample]
+    [setQueryName, handleSetExample],
   );
 
   return (
     <>
       <title>Query | CORE Beta</title>
-      <AddQueryDialog loading={loading} open={modalOpen} onClose={handleModalClose} onSubmit={submitQuery} queryName={queryName} setQueryName={setQueryName} />
+      <AddQueryDialog
+        loading={loading}
+        open={modalOpen}
+        onClose={handleModalClose}
+        onSubmit={submitQuery}
+        queryName={queryName}
+        setQueryName={setQueryName}
+      />
       <Fab
         onClick={handleAddQuery}
         variant="extended"
         color="primary"
         sx={{
-          position: 'fixed',
+          position: "fixed",
           bottom: 32,
           right: 32,
         }}
@@ -43,12 +61,12 @@ const QueryPage: React.FC = () => {
       <Box
         sx={{
           minHeight: 800,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
+          width: "100%",
+          height: "100%",
+          display: "flex",
         }}
       >
-        <Box className="editor" sx={{ overflow: 'hidden', flex: 2 }}>
+        <Box className="editor" sx={{ overflow: "hidden", flex: 2 }}>
           <Editor
             theme={monacoTheme}
             language="ceql"
@@ -56,7 +74,7 @@ const QueryPage: React.FC = () => {
               automaticLayout: true,
               scrollBeyondLastLine: false,
               minimap: { enabled: false },
-              renderWhitespace: 'all',
+              renderWhitespace: "all",
               tabSize: 2,
               fontSize: 20,
               scrollbar: {
@@ -77,6 +95,6 @@ const QueryPage: React.FC = () => {
   );
 };
 
-export const Route = createFileRoute('/query')({
+export const Route = createFileRoute("/query")({
   component: QueryPage,
 });

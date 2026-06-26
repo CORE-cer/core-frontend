@@ -1,14 +1,18 @@
-import { useWatchPageContext } from '@/context/WatchPageContext';
-import { useChartData } from '@/hooks/useChartData';
-import { Box } from '@mui/material';
-import { type RefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { useWatchPageContext } from "@/context/WatchPageContext";
+import { useChartData } from "@/hooks/useChartData";
+import { Box } from "@mui/material";
+import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
 
-import DonutChart from './DonutChart';
-import DraggableChart from './DraggableChart';
-import LineChart from './LineChart';
-import ResponsiveChartWrapper from './ResponsiveChartWrapper';
+import DonutChart from "./DonutChart";
+import DraggableChart from "./DraggableChart";
+import LineChart from "./LineChart";
+import ResponsiveChartWrapper from "./ResponsiveChartWrapper";
 
-type ChartId = 'hits-per-sec' | 'complex-events-per-sec' | 'total-hits' | 'total-complex-events';
+type ChartId =
+  | "hits-per-sec"
+  | "complex-events-per-sec"
+  | "total-hits"
+  | "total-complex-events";
 
 type ChartItem = {
   id: ChartId;
@@ -18,18 +22,36 @@ type ChartItem = {
   size: { width: number; height: number };
 };
 
-const INITIAL_POSITIONS: Record<ChartId, { position: { x: number; y: number }; size: { width: number; height: number } }> = {
-  'hits-per-sec': { position: { x: 20, y: 20 }, size: { width: 400, height: 300 } },
-  'complex-events-per-sec': { position: { x: 440, y: 20 }, size: { width: 400, height: 300 } },
-  'total-hits': { position: { x: 20, y: 400 }, size: { width: 400, height: 300 } },
-  'total-complex-events': { position: { x: 440, y: 400 }, size: { width: 400, height: 300 } },
+const INITIAL_POSITIONS: Record<
+  ChartId,
+  {
+    position: { x: number; y: number };
+    size: { width: number; height: number };
+  }
+> = {
+  "hits-per-sec": {
+    position: { x: 20, y: 20 },
+    size: { width: 400, height: 300 },
+  },
+  "complex-events-per-sec": {
+    position: { x: 440, y: 20 },
+    size: { width: 400, height: 300 },
+  },
+  "total-hits": {
+    position: { x: 20, y: 400 },
+    size: { width: 400, height: 300 },
+  },
+  "total-complex-events": {
+    position: { x: 440, y: 400 },
+    size: { width: 400, height: 300 },
+  },
 };
 
 const CHART_TITLES: Record<ChartId, string> = {
-  'hits-per-sec': 'Hits per sec',
-  'complex-events-per-sec': 'Complex events per sec',
-  'total-hits': 'Total hits',
-  'total-complex-events': 'Total Complex Events',
+  "hits-per-sec": "Hits per sec",
+  "complex-events-per-sec": "Complex events per sec",
+  "total-hits": "Total hits",
+  "total-complex-events": "Total Complex Events",
 };
 
 const ChartsFreeform: React.FC = () => {
@@ -42,32 +64,46 @@ const ChartsFreeform: React.FC = () => {
     return justResizedRefs.current[chartId];
   };
 
-  const { common, donutSeries, lineSeries } = useChartData(queryIdToQueryStat, queries);
+  const { common, donutSeries, lineSeries } = useChartData(
+    queryIdToQueryStat,
+    queries,
+  );
 
   const chartComponents = useMemo<Record<ChartId, React.ReactNode>>(
     () => ({
-      'hits-per-sec': (
+      "hits-per-sec": (
         <ResponsiveChartWrapper>
           <LineChart series={lineSeries.hitsPerSec} colors={common.colors} />
         </ResponsiveChartWrapper>
       ),
-      'complex-events-per-sec': (
+      "complex-events-per-sec": (
         <ResponsiveChartWrapper>
-          <LineChart series={lineSeries.complexEventsPerSec} colors={common.colors} />
+          <LineChart
+            series={lineSeries.complexEventsPerSec}
+            colors={common.colors}
+          />
         </ResponsiveChartWrapper>
       ),
-      'total-hits': (
+      "total-hits": (
         <ResponsiveChartWrapper>
-          <DonutChart series={donutSeries.totalHits} labels={common.labels} colors={common.colors} />
+          <DonutChart
+            series={donutSeries.totalHits}
+            labels={common.labels}
+            colors={common.colors}
+          />
         </ResponsiveChartWrapper>
       ),
-      'total-complex-events': (
+      "total-complex-events": (
         <ResponsiveChartWrapper>
-          <DonutChart series={donutSeries.totalComplexEvents} labels={common.labels} colors={common.colors} />
+          <DonutChart
+            series={donutSeries.totalComplexEvents}
+            labels={common.labels}
+            colors={common.colors}
+          />
         </ResponsiveChartWrapper>
       ),
     }),
-    [lineSeries, donutSeries, common]
+    [lineSeries, donutSeries, common],
   );
 
   const initialCharts = useMemo<ChartItem[]>(
@@ -80,7 +116,7 @@ const ChartsFreeform: React.FC = () => {
       })),
     // Only run once on mount — positions are seeded from constants
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   const [charts, setCharts] = useState<ChartItem[]>(initialCharts);
@@ -91,16 +127,27 @@ const ChartsFreeform: React.FC = () => {
       prevCharts.map((chart) => ({
         ...chart,
         component: chartComponents[chart.id],
-      }))
+      })),
     );
   }, [chartComponents]);
 
   const handleDragEnd = (id: string, newPosition: { x: number; y: number }) => {
-    setCharts((prevCharts) => prevCharts.map((chart) => (chart.id === id ? { ...chart, position: newPosition } : chart)));
+    setCharts((prevCharts) =>
+      prevCharts.map((chart) =>
+        chart.id === id ? { ...chart, position: newPosition } : chart,
+      ),
+    );
   };
 
-  const handleResize = (id: string, newSize: { width: number; height: number }) => {
-    setCharts((prevCharts) => prevCharts.map((chart) => (chart.id === id ? { ...chart, size: newSize } : chart)));
+  const handleResize = (
+    id: string,
+    newSize: { width: number; height: number },
+  ) => {
+    setCharts((prevCharts) =>
+      prevCharts.map((chart) =>
+        chart.id === id ? { ...chart, size: newSize } : chart,
+      ),
+    );
   };
 
   const handleDragStart = (id: string) => {
@@ -114,10 +161,10 @@ const ChartsFreeform: React.FC = () => {
   return (
     <Box
       sx={{
-        position: 'relative',
-        width: '100%',
-        height: '100vh',
-        overflow: 'hidden',
+        position: "relative",
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
         p: 2,
       }}
     >

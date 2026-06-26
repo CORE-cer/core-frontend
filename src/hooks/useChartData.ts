@@ -1,6 +1,6 @@
-import { getQueryColor } from '@/colors';
-import type { QueryIdToQueryInfoMap, QueryIdToQueryStatMap } from '@/types';
-import { useMemo } from 'react';
+import { getQueryColor } from "@/colors";
+import type { QueryIdToQueryInfoMap, QueryIdToQueryStatMap } from "@/types";
+import { useMemo } from "react";
 
 type ChartCommon = {
   colors: string[];
@@ -17,7 +17,10 @@ type LineSeries = {
   complexEventsPerSec: { name: string; data: { x: Date; y: number }[] }[];
 };
 
-export function useChartData(qid2Stats: QueryIdToQueryStatMap, queries: QueryIdToQueryInfoMap) {
+export function useChartData(
+  qid2Stats: QueryIdToQueryStatMap,
+  queries: QueryIdToQueryInfoMap,
+) {
   const common = useMemo<ChartCommon>(() => {
     const res: ChartCommon = { colors: [], labels: [] };
     for (const qid of qid2Stats.keys()) {
@@ -49,7 +52,10 @@ export function useChartData(qid2Stats: QueryIdToQueryStatMap, queries: QueryIdT
       });
       res.complexEventsPerSec.push({
         name: queryInfo.query_name,
-        data: queryStats.perSec.map((s) => ({ x: s.time, y: s.numComplexEvents })),
+        data: queryStats.perSec.map((s) => ({
+          x: s.time,
+          y: s.numComplexEvents,
+        })),
       });
     }
     return res;

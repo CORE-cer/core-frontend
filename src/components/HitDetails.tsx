@@ -1,16 +1,18 @@
-import type { FormattedHit, FormattedMarkedComplexEvent } from '@/types';
-import { formatTime } from '@/utils/formatTime';
-import { Box, Divider, Paper, Typography } from '@mui/material';
+import type { FormattedHit, FormattedMarkedComplexEvent } from "@/types";
+import { formatTime } from "@/utils/formatTime";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 
 type HitDetailsProps = {
   hit: FormattedHit;
   selectedComplexEvent?: FormattedMarkedComplexEvent;
 };
 
-const HitDetails: React.FC<HitDetailsProps> = ({ hit, selectedComplexEvent }) => {
-
+const HitDetails: React.FC<HitDetailsProps> = ({
+  hit,
+  selectedComplexEvent,
+}) => {
   return (
-    <Box sx={{ height: '100%', overflow: 'auto', p: 2 }}>
+    <Box sx={{ height: "100%", overflow: "auto", p: 2 }}>
       <Typography variant="h6" gutterBottom>
         Hit Details
       </Typography>
@@ -33,7 +35,10 @@ const HitDetails: React.FC<HitDetailsProps> = ({ hit, selectedComplexEvent }) =>
           sx={{
             p: 2,
             my: 1,
-            backgroundColor: selectedComplexEvent === event ? 'action.selected' : 'background.paper',
+            backgroundColor:
+              selectedComplexEvent === event
+                ? "action.selected"
+                : "background.paper",
           }}
         >
           <Typography variant="subtitle2" gutterBottom>
@@ -68,4 +73,3 @@ const HitDetails: React.FC<HitDetailsProps> = ({ hit, selectedComplexEvent }) =>
 };
 
 export default HitDetails;
-

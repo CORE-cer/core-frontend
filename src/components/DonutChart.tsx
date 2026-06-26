@@ -1,8 +1,8 @@
-import { useTheme } from '@emotion/react';
-import type { Theme } from '@mui/material/styles';
-import type { ApexOptions } from 'apexcharts';
-import { useEffect, useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
+import { useTheme } from "@emotion/react";
+import type { Theme } from "@mui/material/styles";
+import type { ApexOptions } from "apexcharts";
+import { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
 
 type DonutChartProps = {
   series: number[];
@@ -28,8 +28,8 @@ const DonutChart: React.FC<DonutChartProps> = ({ series, labels, colors }) => {
             speed: 300,
           },
         },
-        type: 'donut',
-        height: 'auto',
+        type: "donut",
+        height: "auto",
         redrawOnParentResize: true,
         redrawOnWindowResize: true,
       },
@@ -42,37 +42,43 @@ const DonutChart: React.FC<DonutChartProps> = ({ series, labels, colors }) => {
         enabled: false,
       },
       legend: {
-        position: 'bottom',
+        position: "bottom",
       },
       dataLabels: {
         formatter(val: number, opts: unknown) {
-          if (!opts || typeof opts !== 'object' || !('seriesIndex' in opts) || typeof opts.seriesIndex !== 'number' || series[opts.seriesIndex] === undefined) {
-            return '';
+          if (
+            !opts ||
+            typeof opts !== "object" ||
+            !("seriesIndex" in opts) ||
+            typeof opts.seriesIndex !== "number" ||
+            series[opts.seriesIndex] === undefined
+          ) {
+            return "";
           }
           const seriesName = labels[opts.seriesIndex];
           if (!seriesName) {
-            return '';
+            return "";
           }
           const str = `${seriesName.toString()} (${val.toFixed(1)}%)`;
           return str;
         },
         style: {
-          fontSize: '12px',
-          fontFamily: 'Roboto',
+          fontSize: "12px",
+          fontFamily: "Roboto",
         },
         dropShadow: {
           enabled: true,
           top: 0,
           left: 0,
           blur: 2,
-          color: '#000',
+          color: "#000",
           opacity: 1,
         },
       },
       plotOptions: {
         pie: {
           donut: {
-            size: '60%',
+            size: "60%",
             labels: {
               show: true,
               total: {
@@ -91,7 +97,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ series, labels, colors }) => {
               height: 200,
             },
             legend: {
-              position: 'bottom',
+              position: "bottom",
             },
           },
         },
@@ -114,12 +120,17 @@ const DonutChart: React.FC<DonutChartProps> = ({ series, labels, colors }) => {
         dataLabels: {
           ...prev.options.dataLabels,
           formatter(val: number, opts: unknown) {
-            if (!opts || typeof opts !== 'object' || !('seriesIndex' in opts) || typeof opts.seriesIndex !== 'number') {
-              return '';
+            if (
+              !opts ||
+              typeof opts !== "object" ||
+              !("seriesIndex" in opts) ||
+              typeof opts.seriesIndex !== "number"
+            ) {
+              return "";
             }
             const seriesName = labels[opts.seriesIndex];
             if (!seriesName) {
-              return '';
+              return "";
             }
             const str = `${seriesName.toString()} (${val.toFixed(1)}%)`;
             return str;
@@ -129,7 +140,15 @@ const DonutChart: React.FC<DonutChartProps> = ({ series, labels, colors }) => {
     }));
   }, [theme, series, labels, colors]);
 
-  return <ReactApexChart height="100%" width="100%" options={config.options} series={config.series} type="donut" />;
+  return (
+    <ReactApexChart
+      height="100%"
+      width="100%"
+      options={config.options}
+      series={config.series}
+      type="donut"
+    />
+  );
 };
 
 export default DonutChart;

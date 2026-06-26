@@ -1,7 +1,17 @@
-import { type FAQItem, globalFAQ } from '@/data/faq';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Chip, Container, Tab, Tabs, Typography } from '@mui/material';
-import { useState } from 'react';
+import { type FAQItem, globalFAQ } from "@/data/faq";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Chip,
+  Container,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -11,7 +21,12 @@ type TabPanelProps = {
 
 function TabPanel({ children, value, index }: TabPanelProps) {
   return (
-    <div role="tabpanel" hidden={value !== index} id={`faq-tabpanel-${index.toString()}`} aria-labelledby={`faq-tab-${index.toString()}`}>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`faq-tabpanel-${index.toString()}`}
+      aria-labelledby={`faq-tab-${index.toString()}`}
+    >
       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
@@ -20,7 +35,7 @@ function TabPanel({ children, value, index }: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `faq-tab-${index.toString()}`,
-    'aria-controls': `faq-tabpanel-${index.toString()}`,
+    "aria-controls": `faq-tabpanel-${index.toString()}`,
   };
 }
 
@@ -40,11 +55,11 @@ function FAQSection({ items, title }: FAQSectionProps) {
           key={item.id}
           sx={{
             mb: 1,
-            '&:before': {
-              display: 'none',
+            "&:before": {
+              display: "none",
             },
-            '&.Mui-expanded': {
-              margin: '0 0 8px 0',
+            "&.Mui-expanded": {
+              margin: "0 0 8px 0",
             },
           }}
         >
@@ -53,8 +68,8 @@ function FAQSection({ items, title }: FAQSectionProps) {
             aria-controls={`panel-${item.id}-content`}
             id={`panel-${item.id}-header`}
             sx={{
-              '& .MuiAccordionSummary-content': {
-                alignItems: 'center',
+              "& .MuiAccordionSummary-content": {
+                alignItems: "center",
                 gap: 2,
               },
             }}
@@ -62,7 +77,14 @@ function FAQSection({ items, title }: FAQSectionProps) {
             <Typography variant="h6" component="div" sx={{ fontWeight: 500 }}>
               {item.question}
             </Typography>
-            {item.category && <Chip label={item.category} size="small" variant="outlined" sx={{ ml: 'auto' }} />}
+            {item.category && (
+              <Chip
+                label={item.category}
+                size="small"
+                variant="outlined"
+                sx={{ ml: "auto" }}
+              />
+            )}
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
@@ -85,17 +107,17 @@ export default function FAQ() {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh',
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
       }}
     >
       <Box
         sx={{
-          flex: '1 1 auto',
+          flex: "1 1 auto",
           minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           py: 3,
         }}
       >
@@ -103,17 +125,28 @@ export default function FAQ() {
           component="main"
           maxWidth="lg"
           sx={{
-            overflow: 'auto',
-            flex: '1 1 auto',
+            overflow: "auto",
+            flex: "1 1 auto",
             minHeight: 0,
           }}
         >
-          <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 4, fontWeight: 500 }}>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{ mb: 4, fontWeight: 500 }}
+          >
             Frequently Asked Questions
           </Typography>
 
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-            <Tabs value={value} onChange={handleChange} aria-label="FAQ sections" variant="scrollable" scrollButtons="auto">
+          <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="FAQ sections"
+              variant="scrollable"
+              scrollButtons="auto"
+            >
               <Tab label="General" {...a11yProps(0)} />
               <Tab label="CEQL Language" {...a11yProps(1)} />
               <Tab label="Technical" {...a11yProps(2)} />
@@ -129,7 +162,10 @@ export default function FAQ() {
           </TabPanel>
 
           <TabPanel value={value} index={2}>
-            <FAQSection items={globalFAQ.technical} title="Technical Information" />
+            <FAQSection
+              items={globalFAQ.technical}
+              title="Technical Information"
+            />
           </TabPanel>
         </Container>
       </Box>

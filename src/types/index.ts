@@ -1,6 +1,6 @@
-import { GetQueryInfoSchema } from '@/schemas/querySchema';
-import { GetStreamInfoSchema } from '@/schemas/streamInfoSchema';
-import { z } from 'zod';
+import { GetQueryInfoSchema } from "@/schemas/querySchema";
+import { GetStreamInfoSchema } from "@/schemas/streamInfoSchema";
+import { z } from "zod";
 
 declare const __brand: unique symbol;
 type Brand<B> = { [__brand]: B };
@@ -13,8 +13,8 @@ export type Branded<T, B> = T & Brand<B>;
 
 // Query Related Types
 
-export type QueryId = Branded<number, 'QueryId'>;
-export type StreamId = Branded<number, 'StreamId'>;
+export type QueryId = Branded<number, "QueryId">;
+export type StreamId = Branded<number, "StreamId">;
 
 type GetQueryInfoSchemaType = z.infer<typeof GetQueryInfoSchema>;
 type GetStreamInfoSchemaType = z.infer<typeof GetStreamInfoSchema>;
@@ -34,7 +34,7 @@ export type ExampleData = {
 };
 
 // Stream Types
-export type StreamType = 'coinbase' | 'bluesky';
+export type StreamType = "coinbase" | "bluesky";
 
 export type StreamTypeExamples = Record<StreamType, ExampleData[]>;
 
@@ -106,7 +106,7 @@ export type QueryStats = {
 };
 
 // View Mode Types
-export type ViewMode = 'list' | 'stats' | 'charts' | 'timeline';
+export type ViewMode = "list" | "stats" | "charts" | "timeline";
 
 // Timeline Types
 export type TimelineEvent = {

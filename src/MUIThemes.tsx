@@ -1,25 +1,25 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 export const MUIThemeDark = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#f783fb',
+      main: "#f783fb",
     },
     secondary: {
-      main: '#6320EE',
+      main: "#6320EE",
     },
   },
 });
 
 export const MUIThemeLight = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#f783fb',
+      main: "#f783fb",
     },
     secondary: {
-      main: '#6320EE',
+      main: "#6320EE",
     },
   },
 });

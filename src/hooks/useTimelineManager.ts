@@ -1,9 +1,12 @@
-import type { DataItem, QueryId, TimelineEvent } from '@/types';
-import { useCallback, useRef, useState } from 'react';
+import type { DataItem, QueryId, TimelineEvent } from "@/types";
+import { useCallback, useRef, useState } from "react";
 
 const MAX_EVENTS_PER_QUERY = 10000;
 
-export function useTimelineManager(data: DataItem[], selectedQueryIds: Set<QueryId>) {
+export function useTimelineManager(
+  data: DataItem[],
+  selectedQueryIds: Set<QueryId>,
+) {
   const eventsRef = useRef<Map<QueryId, TimelineEvent[]>>(new Map());
   const processedLengthRef = useRef(0);
   const eventCounterRef = useRef(0);
@@ -56,7 +59,10 @@ export function useTimelineManager(data: DataItem[], selectedQueryIds: Set<Query
     return events.filter((e) => e.receivedAt.getTime() >= cutoff);
   }, []);
 
-  const getAllActiveQueryEvents = useCallback((): Map<QueryId, TimelineEvent[]> => {
+  const getAllActiveQueryEvents = useCallback((): Map<
+    QueryId,
+    TimelineEvent[]
+  > => {
     const result = new Map<QueryId, TimelineEvent[]>();
     for (const qid of selectedQueryIds) {
       const events = getActiveEvents(qid);
@@ -73,7 +79,10 @@ export function useTimelineManager(data: DataItem[], selectedQueryIds: Set<Query
   }, []);
 
   return {
-    timelineConfig: { timeHorizonSeconds, maxEventsPerQuery: MAX_EVENTS_PER_QUERY },
+    timelineConfig: {
+      timeHorizonSeconds,
+      maxEventsPerQuery: MAX_EVENTS_PER_QUERY,
+    },
     updateTimeHorizon,
     getAllActiveQueryEvents,
     getActiveEvents,

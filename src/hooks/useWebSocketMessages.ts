@@ -6,14 +6,14 @@ import {
   type QueryIdToQueryInfoMap,
   type QueryIdToQueryWebSocketMap,
   type StreamInfo,
-} from '@/types';
-import { formatHit } from '@/utils/formatHit';
-import { useEffect, useRef, useState } from 'react';
+} from "@/types";
+import { formatHit } from "@/utils/formatHit";
+import { useEffect, useRef, useState } from "react";
 
 export function useWebSocketMessages(
   connections: QueryIdToQueryWebSocketMap,
   queryIdToQueryInfoMap: QueryIdToQueryInfoMap,
-  streamsInfo: StreamInfo[]
+  streamsInfo: StreamInfo[],
 ) {
   const [data, setData] = useState<DataItem[]>([]);
   const hitCountsRef = useRef<Map<QueryId, HitCount>>(new Map());
@@ -26,11 +26,13 @@ export function useWebSocketMessages(
 
       ws.onmessage = (event) => {
         const queryInfo = queryIdToQueryInfoMap.get(qid);
-        if (!queryInfo || typeof event.data !== 'string') return;
+        if (!queryInfo || typeof event.data !== "string") return;
 
-        const parsed = ComplexEventSchema.array().safeParse(JSON.parse(event.data));
+        const parsed = ComplexEventSchema.array().safeParse(
+          JSON.parse(event.data),
+        );
         if (!parsed.success) {
-          console.error('Failed to parse complex event:', parsed.error);
+          console.error("Failed to parse complex event:", parsed.error);
           return;
         }
 
@@ -46,7 +48,7 @@ export function useWebSocketMessages(
       };
 
       ws.onclose = () => {
-        console.info('Disconnected from queryId', qid);
+        console.info("Disconnected from queryId", qid);
         hitCountsRef.current.delete(qid);
       };
     }

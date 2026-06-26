@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const AttributeProjectionStreamEventSchema = z.object({
   stream_name: z.string(),
@@ -13,7 +13,9 @@ export const GetQueryInfoSchema = z.object({
   query_string: z.string(),
   query_name: z.string(),
   active: z.boolean(),
-  attribute_projection_stream_event: z.array(AttributeProjectionStreamEventSchema),
+  attribute_projection_stream_event: z.array(
+    AttributeProjectionStreamEventSchema,
+  ),
   attribute_projection_variable: z.record(z.array(z.string())),
 });
 

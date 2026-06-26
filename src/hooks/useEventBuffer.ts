@@ -1,7 +1,11 @@
-import type { DataItem, QueryId } from '@/types';
-import { useEffect, useRef, useState } from 'react';
+import type { DataItem, QueryId } from "@/types";
+import { useEffect, useRef, useState } from "react";
 
-export function useEventBuffer(rawData: DataItem[], eventInterval: number, selectedQueryIds: Set<QueryId>) {
+export function useEventBuffer(
+  rawData: DataItem[],
+  eventInterval: number,
+  selectedQueryIds: Set<QueryId>,
+) {
   const [bufferedData, setBufferedData] = useState<DataItem[]>([]);
   const bufferRef = useRef<DataItem[]>([]);
   const lastRawLengthRef = useRef(0);
