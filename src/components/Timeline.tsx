@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import TimelineEventComponent from './TimelineEvent';
 
-const MAX_VISIBLE_EVENTS_PER_QUERY = 100;
+const MAX_VISIBLE_EVENTS_PER_QUERY = 2000;
 
 export default function Timeline() {
   const { queries: queryIdToQueryInfoMap, selectedQueryIds, getAllActiveQueryEvents, timelineConfig, updateTimeHorizon: onTimeHorizonChange } = useWatchPageContext();
@@ -55,7 +55,7 @@ export default function Timeline() {
 
           const next = new Map<QueryId, TimelineEvent[]>();
           for (const [qid, events] of activeEvents) {
-            next.set(qid, events.slice(0, MAX_VISIBLE_EVENTS_PER_QUERY));
+            next.set(qid, events.slice(-MAX_VISIBLE_EVENTS_PER_QUERY));
           }
           return next;
         });
