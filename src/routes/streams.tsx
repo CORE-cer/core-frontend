@@ -51,7 +51,11 @@ function SummaryBar({
           value: totalEps.toFixed(1),
           color: "info.main",
         },
-        { label: "Active Queries", value: activeQueryCount, color: "text.primary" },
+        {
+          label: "Active Queries",
+          value: activeQueryCount,
+          color: "text.primary",
+        },
       ].map((item) => (
         <Paper
           key={item.label}
@@ -69,10 +73,7 @@ function SummaryBar({
           >
             {item.label}
           </Typography>
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: 700, color: item.color }}
-          >
+          <Typography variant="h4" sx={{ fontWeight: 700, color: item.color }}>
             {item.value}
           </Typography>
         </Paper>
