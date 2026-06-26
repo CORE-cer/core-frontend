@@ -120,3 +120,13 @@ export type TimelineConfig = {
   timeHorizonSeconds: number;
   maxEventsPerQuery: number;
 };
+
+// Stream Stats Types
+export type StreamStats = {
+  name: string;
+  events_per_sec: number;
+  total_events: number;
+  last_event_seconds_ago: number | null;
+  status: "live" | "stale" | "inactive";
+  event_types: string[];
+};
