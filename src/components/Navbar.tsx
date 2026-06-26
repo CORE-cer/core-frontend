@@ -38,7 +38,7 @@ const Logo = () => {
       to="/"
       sx={{
         display: "flex",
-        alignItems: "ceter",
+        alignItems: "center",
         justifyContent: "center",
         textDecoration: "none",
         "&:hover img": {

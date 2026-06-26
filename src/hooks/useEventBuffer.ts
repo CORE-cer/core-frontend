@@ -15,13 +15,17 @@ export function useEventBuffer(
     lastRawLengthRef.current = rawData.length;
 
     if (eventInterval === 0) {
-      if (newItems.length > 0) {
-        setBufferedData((prev) => [...prev, ...newItems]);
+      const flushedItems = [...bufferRef.current, ...newItems].filter((item) =>
+        selectedQueryIds.has(item.qid),
+      );
+      bufferRef.current = [];
+      if (flushedItems.length > 0) {
+        setBufferedData((prev) => [...prev, ...flushedItems]);
       }
     } else {
       bufferRef.current.push(...newItems);
     }
-  }, [rawData, eventInterval]);
+  }, [rawData, eventInterval, selectedQueryIds]);
 
   useEffect(() => {
     if (eventInterval === 0) return;

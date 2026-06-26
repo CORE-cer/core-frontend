@@ -39,8 +39,6 @@ export function setupMonaco(monaco: typeof import("monaco-editor")) {
   // };
   // }
 
-  console.log("Setting up Monaco Editor for CEQL...");
-
   monaco.editor.defineTheme("ceql-dark", CEQLDark);
   monaco.editor.defineTheme("ceql-light", CEQLLight);
 

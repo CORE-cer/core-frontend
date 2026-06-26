@@ -58,7 +58,11 @@ export default function Timeline() {
           } else {
             for (const [qid, events] of activeEvents) {
               const prevEvents = prev.get(qid);
-              if (!prevEvents || prevEvents.length !== events.length) {
+              if (
+                !prevEvents ||
+                prevEvents.length !== events.length ||
+                prevEvents.at(-1)?.id !== events.at(-1)?.id
+              ) {
                 changed = true;
                 break;
               }
@@ -87,6 +91,8 @@ export default function Timeline() {
 
           if (age > timeHorizonMs) {
             dot.style.display = "none";
+          } else {
+            dot.style.display = "";
           }
         }
       }

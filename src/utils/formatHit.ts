@@ -80,16 +80,15 @@ function formatEvent(
     }
 
     for (const projection of queryInfo.attribute_projection_stream_event) {
-      if (attribute_names.length > 0) {
-        throw new Error(
-          `Multiple attribute projections found for stream ${stream} and event ${eventType}`,
-        );
-      }
-
       if (
         projection.stream_name === stream &&
         projection.event_name === eventType
       ) {
+        if (attribute_names.length > 0) {
+          throw new Error(
+            `Multiple attribute projections found for stream ${stream} and event ${eventType}`,
+          );
+        }
         attribute_names.push(...projection.attributes);
       }
     }

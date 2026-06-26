@@ -4,6 +4,8 @@ import type {
   QueryIdToQueryStatMap,
   QueryIdToQueryWebSocketMap,
 } from "@/types";
+
+const MAX_PER_SEC_SAMPLES = 3600;
 import { type RefObject, useEffect, useState } from "react";
 
 export function useQueryStats(
@@ -53,6 +55,9 @@ export function useQueryStats(
           if (!curr || !counts) continue;
 
           curr.perSec.push({ ...counts, time });
+          if (curr.perSec.length > MAX_PER_SEC_SAMPLES) {
+            curr.perSec.shift();
+          }
           curr.hitStats.total += counts.numHits;
           curr.complexEventStats.total += counts.numComplexEvents;
           curr.hitStats.max = Math.max(curr.hitStats.max, counts.numHits);

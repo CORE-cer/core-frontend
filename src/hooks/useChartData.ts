@@ -21,31 +21,36 @@ export function useChartData(
   qid2Stats: QueryIdToQueryStatMap,
   queries: QueryIdToQueryInfoMap,
 ) {
+  const chartEntries = useMemo(
+    () =>
+      Array.from(qid2Stats.entries()).flatMap(([queryId, queryStats]) => {
+        const queryInfo = queries.get(queryId);
+        return queryInfo ? [{ queryId, queryInfo, queryStats }] : [];
+      }),
+    [qid2Stats, queries],
+  );
+
   const common = useMemo<ChartCommon>(() => {
     const res: ChartCommon = { colors: [], labels: [] };
-    for (const qid of qid2Stats.keys()) {
-      const queryInfo = queries.get(qid);
-      if (!queryInfo) continue;
-      res.colors.push(getQueryColor(Number(qid)));
+    for (const { queryId, queryInfo } of chartEntries) {
+      res.colors.push(getQueryColor(Number(queryId)));
       res.labels.push(queryInfo.query_name);
     }
     return res;
-  }, [qid2Stats, queries]);
+  }, [chartEntries]);
 
   const donutSeries = useMemo<DonutSeries>(() => {
     const res: DonutSeries = { totalHits: [], totalComplexEvents: [] };
-    for (const queryStats of qid2Stats.values()) {
+    for (const { queryStats } of chartEntries) {
       res.totalHits.push(queryStats.hitStats.total);
       res.totalComplexEvents.push(queryStats.complexEventStats.total);
     }
     return res;
-  }, [qid2Stats]);
+  }, [chartEntries]);
 
   const lineSeries = useMemo<LineSeries>(() => {
     const res: LineSeries = { hitsPerSec: [], complexEventsPerSec: [] };
-    for (const [queryId, queryStats] of qid2Stats.entries()) {
-      const queryInfo = queries.get(queryId);
-      if (!queryInfo) continue;
+    for (const { queryInfo, queryStats } of chartEntries) {
       res.hitsPerSec.push({
         name: queryInfo.query_name,
         data: queryStats.perSec.map((s) => ({ x: s.time, y: s.numHits })),
@@ -59,7 +64,7 @@ export function useChartData(
       });
     }
     return res;
-  }, [qid2Stats, queries]);
+  }, [chartEntries]);
 
   return { common, donutSeries, lineSeries };
 }

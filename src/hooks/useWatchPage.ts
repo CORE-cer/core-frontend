@@ -55,9 +55,11 @@ export function useWatchPage() {
 
   const handleViewModeChange = (
     _: React.MouseEvent<HTMLElement>,
-    newValue: ViewMode,
+    newValue: ViewMode | null,
   ) => {
-    setViewMode(newValue);
+    if (newValue !== null) {
+      setViewMode(newValue);
+    }
   };
 
   const clearData = () => {

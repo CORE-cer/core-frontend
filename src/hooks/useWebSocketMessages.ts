@@ -28,15 +28,20 @@ export function useWebSocketMessages(
         const queryInfo = queryIdToQueryInfoMap.get(qid);
         if (!queryInfo || typeof event.data !== "string") return;
 
-        const parsed = ComplexEventSchema.array().safeParse(
-          JSON.parse(event.data),
-        );
-        if (!parsed.success) {
-          console.error("Failed to parse complex event:", parsed.error);
+        let transformedHits;
+        try {
+          const parsed = ComplexEventSchema.array().safeParse(
+            JSON.parse(event.data),
+          );
+          if (!parsed.success) {
+            console.error("Failed to parse complex event:", parsed.error);
+            return;
+          }
+          transformedHits = formatHit(parsed.data, queryInfo, streamsInfo);
+        } catch (error) {
+          console.error("Failed to process websocket message:", error);
           return;
         }
-
-        const transformedHits = formatHit(parsed.data, queryInfo, streamsInfo);
 
         const counts = hitCountsRef.current.get(qid);
         if (counts) {
