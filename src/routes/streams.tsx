@@ -383,14 +383,22 @@ function StreamTable({
 
   return (
     <TableContainer component={Paper} variant="outlined">
-      <Table size="small">
+      <Table size="small" sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
             <TableCell>Stream</TableCell>
-            <TableCell align="right">Events/sec</TableCell>
-            <TableCell align="right">Total Events</TableCell>
-            <TableCell align="right">Last Event</TableCell>
-            <TableCell align="center">Status</TableCell>
+            <TableCell align="right" sx={{ width: 120 }}>
+              Events/sec
+            </TableCell>
+            <TableCell align="right" sx={{ width: 130 }}>
+              Total Events
+            </TableCell>
+            <TableCell align="right" sx={{ width: 120 }}>
+              Last Event
+            </TableCell>
+            <TableCell align="center" sx={{ width: 100 }}>
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
