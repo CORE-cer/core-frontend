@@ -262,13 +262,14 @@ function StreamDetailRow({
         <Box sx={{ px: 2, py: 1.5, bgcolor: "action.hover" }}>
           <Box
             sx={{
-              display: "flex",
+              display: "grid",
+              gridTemplateColumns: schemaInfo ? "1fr 1fr" : "1fr",
               gap: 2,
               mb: 1,
             }}
           >
             {/* Left: About + Schema */}
-            <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={{ minWidth: 0 }}>
               {schemaInfo && (
                 <>
                   <Typography
@@ -303,7 +304,7 @@ function StreamDetailRow({
 
             {/* Right: FAQ */}
             {schemaInfo && (
-              <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Box sx={{ minWidth: 0 }}>
                 <Typography
                   variant="overline"
                   color="text.secondary"
@@ -486,7 +487,7 @@ function StreamsPage() {
       >
         <Container
           component="main"
-          maxWidth="lg"
+          maxWidth="xl"
           sx={{
             overflow: "auto",
             flex: "1 1 auto",
