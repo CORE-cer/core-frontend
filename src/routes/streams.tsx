@@ -167,7 +167,7 @@ function LiveEventFeed({ streamName }: { streamName: string }) {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const wsUrl = getWsBaseUrl() + "/stream/events/" + streamName;
+    const wsUrl = getWsBaseUrl() + "/ws/stream/events/" + streamName;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
