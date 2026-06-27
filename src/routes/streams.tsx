@@ -263,7 +263,7 @@ function StreamDetailRow({
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: schemaInfo ? "1fr 1fr" : "1fr",
               gap: 2,
               mb: 1,
             }}
@@ -279,7 +279,7 @@ function StreamDetailRow({
                   >
                     About
                   </Typography>
-                  <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+                  <Typography variant="body2" sx={{ mb: 1, lineHeight: 1.5 }}>
                     {schemaInfo.description}
                   </Typography>
                 </>
@@ -353,7 +353,7 @@ function StreamDetailRow({
             )}
           </Box>
 
-          <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 1 }} />
           <Typography
             variant="overline"
             color="text.secondary"
