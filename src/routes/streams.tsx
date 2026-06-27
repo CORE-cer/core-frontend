@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getStreamStats, getQueryInfos, getStreamsInfo } from "@/utils/api";
+import {
+  getStreamStats,
+  getQueryInfos,
+  getStreamsInfo,
+  getWsBaseUrl,
+} from "@/utils/api";
 import { getSchemaInfo, type FAQItem } from "@/data/faq";
 import type { StreamInfo, StreamStats, StreamType } from "@/types";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -11,6 +16,7 @@ import {
   Box,
   Chip,
   Container,
+  Divider,
   Paper,
   Table,
   TableBody,
@@ -20,7 +26,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/streams")({
   component: StreamsPage,
@@ -148,6 +154,97 @@ function StreamSchema({ streamInfo }: { streamInfo: StreamInfo }) {
   );
 }
 
+const MAX_EVENTS = 50;
+
+type RawEvent = {
+  event_type: string;
+  attributes: (string | number | boolean)[];
+};
+
+function LiveEventFeed({ streamName }: { streamName: string }) {
+  const [events, setEvents] = useState<RawEvent[]>([]);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const wsUrl = getWsBaseUrl() + "/stream/events/" + streamName;
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
+
+    ws.onmessage = (msg) => {
+      const event = JSON.parse(msg.data as string) as RawEvent;
+      setEvents((prev) => {
+        const next = [event, ...prev];
+        if (next.length > MAX_EVENTS) next.length = MAX_EVENTS;
+        return next;
+      });
+    };
+
+    return () => {
+      ws.close();
+      wsRef.current = null;
+    };
+  }, [streamName]);
+
+  return (
+    <Box
+      sx={{
+        maxHeight: 240,
+        overflow: "auto",
+        fontFamily: '"Roboto Mono", monospace',
+        fontSize: "0.7rem",
+        border: 1,
+        borderColor: "divider",
+        borderRadius: 1,
+        bgcolor: "background.default",
+      }}
+    >
+      {events.length === 0 ? (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ p: 2, textAlign: "center", fontFamily: "inherit" }}
+        >
+          Waiting for events...
+        </Typography>
+      ) : (
+        events.map((event, i) => (
+          <Box
+            key={i}
+            sx={{
+              px: 1.5,
+              py: 0.5,
+              borderBottom: 1,
+              borderColor: "divider",
+              display: "flex",
+              gap: 1,
+              "&:last-child": { borderBottom: 0 },
+            }}
+          >
+            <Chip
+              label={event.event_type}
+              size="small"
+              variant="outlined"
+              color="info"
+              sx={{ fontFamily: "inherit", fontSize: "inherit", height: 20 }}
+            />
+            <Box
+              component="span"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color: "text.secondary",
+              }}
+            >
+              {event.attributes.join(", ")}
+            </Box>
+          </Box>
+        ))
+      )}
+    </Box>
+  );
+}
+
 function StreamDetailRow({
   stream,
   streamInfo,
@@ -161,98 +258,109 @@ function StreamDetailRow({
   return (
     <TableRow>
       <TableCell colSpan={5} sx={{ py: 0, px: 0 }}>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 3,
-            p: 3,
-            bgcolor: "action.hover",
-          }}
-        >
-          {/* Left: About + Schema */}
-          <Box>
-            {schemaInfo && (
-              <>
-                <Typography
-                  variant="overline"
-                  color="text.secondary"
-                  sx={{ mb: 1, display: "block" }}
-                >
-                  About
-                </Typography>
-                <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
-                  {schemaInfo.description}
-                </Typography>
-              </>
-            )}
-            <Typography
-              variant="overline"
-              color="text.secondary"
-              sx={{ mb: 1, display: "block" }}
-            >
-              Event Schema
-            </Typography>
-            {streamInfo ? (
-              <StreamSchema streamInfo={streamInfo} />
-            ) : (
-              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                {stream.event_types.map((et) => (
-                  <Chip key={et} label={et} size="small" variant="outlined" />
-                ))}
-              </Box>
-            )}
-          </Box>
-
-          {/* Right: FAQ */}
-          {schemaInfo && (
+        <Box sx={{ p: 3, bgcolor: "action.hover" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 3,
+              mb: 2,
+            }}
+          >
+            {/* Left: About + Schema */}
             <Box>
+              {schemaInfo && (
+                <>
+                  <Typography
+                    variant="overline"
+                    color="text.secondary"
+                    sx={{ mb: 1, display: "block" }}
+                  >
+                    About
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.7 }}>
+                    {schemaInfo.description}
+                  </Typography>
+                </>
+              )}
               <Typography
                 variant="overline"
                 color="text.secondary"
                 sx={{ mb: 1, display: "block" }}
               >
-                FAQ
+                Event Schema
               </Typography>
-              {schemaInfo.faqs.map((item: FAQItem) => (
-                <Accordion
-                  key={item.id}
-                  disableGutters
-                  sx={{
-                    "&:before": { display: "none" },
-                    "&.Mui-expanded": { margin: "0 0 4px 0" },
-                  }}
+              {streamInfo ? (
+                <StreamSchema streamInfo={streamInfo} />
+              ) : (
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                  {stream.event_types.map((et) => (
+                    <Chip key={et} label={et} size="small" variant="outlined" />
+                  ))}
+                </Box>
+              )}
+            </Box>
+
+            {/* Right: FAQ */}
+            {schemaInfo && (
+              <Box>
+                <Typography
+                  variant="overline"
+                  color="text.secondary"
+                  sx={{ mb: 1, display: "block" }}
                 >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                  FAQ
+                </Typography>
+                {schemaInfo.faqs.map((item: FAQItem) => (
+                  <Accordion
+                    key={item.id}
+                    disableGutters
                     sx={{
-                      "& .MuiAccordionSummary-content": {
-                        alignItems: "center",
-                        gap: 1,
-                      },
+                      "&:before": { display: "none" },
+                      "&.Mui-expanded": { margin: "0 0 4px 0" },
                     }}
                   >
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {item.question}
-                    </Typography>
-                    {item.category && (
-                      <Chip
-                        label={item.category}
-                        size="small"
-                        variant="outlined"
-                        sx={{ ml: "auto" }}
-                      />
-                    )}
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-                      {item.answer}
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </Box>
-          )}
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      sx={{
+                        "& .MuiAccordionSummary-content": {
+                          alignItems: "center",
+                          gap: 1,
+                        },
+                      }}
+                    >
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {item.question}
+                      </Typography>
+                      {item.category && (
+                        <Chip
+                          label={item.category}
+                          size="small"
+                          variant="outlined"
+                          sx={{ ml: "auto" }}
+                        />
+                      )}
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                        {item.answer}
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Box>
+            )}
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+          <Typography
+            variant="overline"
+            color="text.secondary"
+            sx={{ mb: 1, display: "block" }}
+          >
+            Live Events
+          </Typography>
+          <LiveEventFeed streamName={stream.name} />
         </Box>
       </TableCell>
     </TableRow>
