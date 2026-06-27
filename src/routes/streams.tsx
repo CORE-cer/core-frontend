@@ -259,17 +259,16 @@ function StreamDetailRow({
   return (
     <TableRow>
       <TableCell colSpan={5} sx={{ py: 0, px: 0 }}>
-        <Box sx={{ p: 2, bgcolor: "action.hover" }}>
+        <Box sx={{ px: 2, py: 1.5, bgcolor: "action.hover" }}>
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: schemaInfo ? "1fr 1fr" : "1fr",
+              display: "flex",
               gap: 2,
               mb: 1,
             }}
           >
             {/* Left: About + Schema */}
-            <Box>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
               {schemaInfo && (
                 <>
                   <Typography
@@ -304,7 +303,7 @@ function StreamDetailRow({
 
             {/* Right: FAQ */}
             {schemaInfo && (
-              <Box>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
                 <Typography
                   variant="overline"
                   color="text.secondary"
