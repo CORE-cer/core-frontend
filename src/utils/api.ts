@@ -4,6 +4,7 @@ import type {
   QueryInfo,
   StreamId,
   StreamInfo,
+  StreamStats,
 } from "@/types";
 import { CreateQuerySchema, GetQueryInfoSchema } from "@/schemas/querySchema";
 import { GetStreamInfoSchema } from "@/schemas/streamInfoSchema";
@@ -126,3 +127,14 @@ export const addQuery = async ({
     throw new Error(await res.text());
   }
 };
+
+export async function getStreamStats(): Promise<StreamStats[]> {
+  const baseUrl = getApiBaseUrl();
+  const fetchRes = await fetch(baseUrl + "/stream/stats", {
+    method: "GET",
+  });
+  if (!fetchRes.ok) {
+    throw new Error("Failed to fetch stream stats");
+  }
+  return (await fetchRes.json()) as StreamStats[];
+}

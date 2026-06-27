@@ -6,6 +6,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import SensorsIcon from "@mui/icons-material/Sensors";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   AppBar,
@@ -188,6 +189,11 @@ export default function Navbar({ children, renderMain = true }: NavbarProps) {
             text="Watch"
             href="/watch"
             icon={<VisibilityIcon />}
+          />
+          <DrawerListItem
+            text="Streams"
+            href="/streams"
+            icon={<SensorsIcon />}
           />
           <DrawerListItem
             text="Help & FAQ"
