@@ -119,15 +119,16 @@ function StreamSchema({ streamInfo }: { streamInfo: StreamInfo }) {
       component="pre"
       sx={{
         fontFamily: '"Roboto Mono", monospace',
-        fontSize: "0.75rem",
+        fontSize: "0.7rem",
         bgcolor: "background.default",
-        p: 1.5,
+        p: 1,
         borderRadius: 1,
         border: 1,
         borderColor: "divider",
         overflow: "auto",
+        maxHeight: 120,
         m: 0,
-        lineHeight: 1.8,
+        lineHeight: 1.6,
       }}
     >
       {streamInfo.events_info.map((event, i) => (
@@ -258,13 +259,13 @@ function StreamDetailRow({
   return (
     <TableRow>
       <TableCell colSpan={5} sx={{ py: 0, px: 0 }}>
-        <Box sx={{ p: 3, bgcolor: "action.hover" }}>
+        <Box sx={{ p: 2, bgcolor: "action.hover" }}>
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 3,
-              mb: 2,
+              gap: 2,
+              mb: 1,
             }}
           >
             {/* Left: About + Schema */}
